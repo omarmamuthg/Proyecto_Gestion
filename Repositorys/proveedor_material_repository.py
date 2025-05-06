@@ -8,31 +8,6 @@ from typing import  Optional
 
 class ProveedorMaterialRepository:
 
-    # def __init__(self, connection_string: str):
-    #     """Inicializa el repositorio con la cadena de conexión"""
-    #     if not connection_string:
-    #         raise ValueError("Se requiere una conexión pyodbc válida")
-    #     self.connection_string = connection_string
-    #     self.conn = self._get_connection()  # Inicializa la conexión
-    #     self.table_name = "Proveedor_Material"  # Define el nombre de la tabla si lo necesitas
-
-    # def _get_connection(self):
-    #     """Crea y devuelve la conexión con la base de datos"""
-    #     print(f"Conectando con: {self.connection_string}")
-    #     return pyodbc.connect(self.connection_string)
-
-    # def obtener_vinculo(self, id_proveedor_material: int):
-    #     query = "SELECT * FROM Proveedor_Material WHERE id_proveedor_material = ?"
-        
-    #     # Obtener la conexión con el método _get_connection
-    #     conn = self._get_connection()
-    #     cursor = conn.cursor()
-    #     cursor.execute(query, (id_proveedor_material,))
-    #     result = cursor.fetchone()
-    #     cursor.close()
-    #     conn.close()
-    #     return result  # Retorna el resultado o None si no lo encuentra
-
 
     def __init__(self, connection_string: str):
         """Inicializa el repositorio con la cadena de conexión"""
@@ -44,7 +19,7 @@ class ProveedorMaterialRepository:
 
     def _get_connection(self):
         """Crea y devuelve la conexión con la base de datos"""
-        print(f"Conectando con: {self.connection_string}")
+        # print(f"Conectando con: {self.connection_string}")
         return pyodbc.connect(self.connection_string)
 
     def obtener_vinculo(self, id_proveedor_material: int):

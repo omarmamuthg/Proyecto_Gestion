@@ -364,7 +364,7 @@ class CotizacionRepository:
     # def _get_connection(self):
     #     return pyodbc.connect(self.connection_string)
     def _get_connection(self):
-        print(f"Intentando conectar con connection_string: {self.connection_string}")
+        # print(f"Intentando conectar con connection_string: {self.connection_string}")
         return pyodbc.connect(self.connection_string)
 
 

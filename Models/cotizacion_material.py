@@ -8,6 +8,7 @@
 #     id_proveedor_material: Optional[int] = None    # Clave foránea a la tabla Proveedor_Material (YES)
 #     cantidad: Optional[Decimal] = None             # Cantidad del material en la cotización (YES)
 
+#cotizacion_material
 from pydantic import BaseModel, validator
 from typing import Optional
 from decimal import Decimal

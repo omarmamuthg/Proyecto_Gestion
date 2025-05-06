@@ -394,7 +394,7 @@ while True:
                                         else:
                                             print("Operación cancelada por el usuario")
                                             limpiar_pantalla()
-                                            break
+                                            # break
                             
                             except ValueError:
                                 print("\n❌ Error: Debe ingresar un número válido")
@@ -403,8 +403,9 @@ while True:
                     
                     except Exception as e:
                         print(f"\n❌ Error inesperado: {str(e)}")
+                
     
-                    # input("\nPresione ENTER para continuar...")
+                    input("\nPresione ENTER para continuar...")
                     limpiar_pantalla()
             elif entrada_cliente.opcionSub == "4":
                 while True:
@@ -525,6 +526,263 @@ while True:
                 break
 
 
+    # elif entrada.opcion == "2":
+    #     while True:  # Bucle principal de cotizaciones
+    #         print("Has seleccionado Cotizaciones.")
+    #         menu_cotizaciones()
+    #         entrada_cotizacion = pedir_opcion_submenu()
+    #         limpiar_pantalla()
+    #         if entrada_cotizacion.opcionSub == "1":
+    #             print("Has seleccionado agregar una cotizacion.")
+    #             controller_cotizacion = CotizacionController(connection_string)
+
+    #             # Parte 1: Información del Cliente
+    #             cliente_seleccionado = None
+    #             while True:
+    #                 print("\n=== Información del Cliente ===")
+    #                 controller = ClienteController(connection_string)
+    #                 id_cliente_input = input("Ingrese el ID del cliente ('0' para buscar): ").strip()
+
+    #                 if id_cliente_input == '0':
+    #                     print("\nOperación cancelada por el usuario")
+    #                     input("\nPresione ENTER para continuar...")
+    #                     limpiar_pantalla()
+    #                     break
+    #                 elif id_cliente_input.isdigit():
+    #                     cliente_seleccionado = controller.obtener_cliente(int(id_cliente_input))
+    #                     if cliente_seleccionado:
+    #                         print(f"Cliente encontrado: {cliente_seleccionado.nombre}")
+    #                         break  # Sale del bucle de selección de cliente
+    #                     else:
+    #                         print(f"El cliente con ID {id_cliente_input} no existe.")
+    #                         opcion_cliente = input("¿Desea ir a la opción de cliente para agregarlo? (s/n): ").lower()
+    #                         if opcion_cliente == 's':
+    #                             print("Redirigiendo a la opción de cliente...")
+    #                             limpiar_pantalla()
+    #                             break  # Sale para redirigir (volverá al menú principal y el usuario elegirá '1')
+    #                         else:
+    #                             input("\nPresione ENTER para continuar...")
+    #                             limpiar_pantalla()
+    #                             break  # Vuelve a pedir ID
+    #                 else:
+    #                     print("Por favor, ingrese un ID de cliente válido o '0' para buscar.")
+    #                     input("\nPresione ENTER para continuar...")
+    #                     limpiar_pantalla()
+    #                     continue  # Vuelve a pedir ID
+
+    #             if not cliente_seleccionado:
+    #                 continue  # Vuelve al menú de cotizaciones
+
+    #             # Parte 2: Datos de Cotización
+    #             print("\n=== Datos del Cliente para la Cotización ===")
+    #             print(f"Nombre: {cliente_seleccionado.nombre}")
+    #             print(f"Correo: {cliente_seleccionado.correo or 'No especificado'}")
+    #             print(f"Teléfono: {cliente_seleccionado.telefono or 'No especificado'}")
+    #             print(f"Tipo de Cliente: {cliente_seleccionado.tipo_cliente}")
+    #             print(f"RFC: {cliente_seleccionado.rfc or 'No especificado'}")
+
+    #             fecha_creacion = datetime.today()
+    #             fecha_creacion_str = fecha_creacion.strftime('%Y-%m-%d')
+    #             print(f"Fecha de Creación: {fecha_creacion_str}")
+
+    #             fecha_activacion_str = input("Ingrese la fecha de activación (YYYY-MM-DD): ").strip()
+    #             observaciones = input("Ingrese las observaciones de la cotización: ").strip()
+    #             usuario_creador = input("Ingrese el usuario creador: ").strip()
+
+    #             cotizacion_data = {
+    #                 "id_cliente": cliente_seleccionado.id_cliente,
+    #                 "fecha_creacion": fecha_creacion,
+    #                 "fecha_activacion": datetime.strptime(fecha_activacion_str, '%Y-%m-%d') if fecha_activacion_str else None,
+    #                 "fecha_finalizacion": None,
+    #                 "fecha_cancelacion": None,
+    #                 "observaciones": observaciones,
+    #                 "usuario_creador": usuario_creador,
+    #                 "nombre_cliente": cliente_seleccionado.nombre,
+    #                 "correo_cliente": cliente_seleccionado.correo or "",
+    #                 "telefono_cliente": cliente_seleccionado.telefono,
+    #                 "tipo_cliente": cliente_seleccionado.tipo_cliente,
+    #                 "rfc_cliente": cliente_seleccionado.rfc or "",
+    #                 "activo": True
+    #             }
+
+    #             # Parte 3: Servicios
+    #             servicios_seleccionados = []
+    #             while True:
+    #                 print("\n=== Información del Servicio ===")
+    #                 nombre_servicio = input("Ingrese el nombre del servicio (o '0' para terminar): ").strip()
+
+    #                 if nombre_servicio == '0':
+    #                     if not servicios_seleccionados:
+    #                         confirmar = input("No ha agregado servicios. ¿Desea cancelar? (s/n): ").lower()
+    #                         if confirmar == 's':
+    #                             print("\nOperación cancelada por el usuario")
+    #                             input("\nPresione ENTER para continuar...")
+    #                             limpiar_pantalla()
+    #                             break  # Sale del bucle de servicios y vuelve al menú principal de cotizaciones
+    #                         else:
+    #                             continue  # Vuelve a pedir servicio
+    #                     else:
+    #                         break  # Sale del bucle de recolección de servicios
+
+    #                 descripcion_servicio = input("Ingrese la descripción del servicio (opcional): ").strip() or None
+    #                 tipo_servicio = input("Ingrese el tipo de servicio (opcional): ").strip() or None
+
+    #                 try:
+    #                     costo_servicio = float(input("Ingrese el costo del servicio: ").strip())
+    #                     cantidad_servicio_input = input("Ingrese la cantidad del servicio (opcional): ").strip()
+    #                     cantidad_servicio = float(cantidad_servicio_input) if cantidad_servicio_input else None
+
+    #                     servicios_seleccionados.append({
+    #                         "nombre_servicio": nombre_servicio,
+    #                         "descripcion_servicio": descripcion_servicio,
+    #                         "tipo_servicio": tipo_servicio,
+    #                         "costo_servicio": costo_servicio,
+    #                         "cantidad_servicio": cantidad_servicio,
+    #                         "fecha_creacion_servicio": datetime.today(),
+    #                         "usuario_creador_servicio": usuario_creador,
+    #                         "activo": True,
+    #                         "fecha_actualizacion_servicio": None
+    #                     })
+    #                     print(f"✅ Servicio '{nombre_servicio}' agregado a la lista.")
+
+    #                 except ValueError:
+    #                     print("❌ Error: Ingrese valores numéricos válidos")
+    #                     continue  # Vuelve a pedir datos del servicio
+
+    #             # Si salimos del bucle sin servicios, volvemos al menú principal de cotizaciones
+    #             if not servicios_seleccionados:
+    #                 continue
+
+    #             # --- Opción para Agregar Materiales ---
+    #             materiales_seleccionados = []
+    #             while True:
+    #                 agregar_material = input("\n¿Desea agregar materiales a esta cotización? (si/no): ")
+    #                 if agregar_material.lower() == 'si':
+    #                     print("\n--- Materiales Disponibles ---")
+    #                     material_controller = MaterialController(connection_string)
+    #                     cotizacion_material_controller = CotizacionMaterialController(connection_string)
+    #                     materiales_disponibles = material_controller.obtener_todos_materiales()
+    #                     if materiales_disponibles:
+    #                         for material in materiales_disponibles:
+    #                             # print(f"ID: {material['id_material']}, Nombre: {material['nombre']}, Descripción: {material['descripcion']}")
+    #                             print(f"ID: {material.id_material}, Nombre: {material.nombre}, Descripción: {material.descripcion}")
+    #                         try:
+    #                             id_material_seleccionado = int(input("Ingrese el ID del material que desea agregar (o 0 para volver): "))
+    #                             if id_material_seleccionado == 0:
+    #                                 break
+
+    #                             # Lógica para obtener o solicitar el id_proveedor_material
+    #                             id_proveedor_material_seleccionado = input("Ingrese el ID del Proveedor-Material (opcional, deje vacío si no aplica): ")
+    #                             id_proveedor_material = int(id_proveedor_material_seleccionado) if id_proveedor_material_seleccionado else None
+
+    #                             cantidad_material = Decimal(input("Ingrese la cantidad del material: "))
+
+    #                             material_info = next((m for m in materiales_disponibles if m.id_material == id_material_seleccionado), None)
+   
+    #                             if material_info:
+    #                                 materiales_seleccionados.append({
+    #                                     "id_material": id_material_seleccionado,
+    #                                     "nombre_material": material_info.nombre,  # Corrección aquí
+    #                                     "cantidad": cantidad_material,
+    #                                     "id_proveedor_material": id_proveedor_material  # Agrega esta línea
+    #                                 })
+    #                                 print(f"✅ Material '{material_info.nombre}' agregado a la lista.")
+    #                             else:
+    #                                 print("❌ El ID del material ingresado no es válido.")
+
+    #                         except ValueError:
+    #                             print("❌ ID de material o cantidad inválido.")
+    #                     else:
+    #                         print("No hay materiales disponibles en este momento.")
+
+    #                 elif agregar_material.lower() == 'no':
+    #                     break
+    #                 else:
+    #                     print("Por favor, ingrese 'si' o 'no'.")
+
+    #             # Mostrar resumen de servicios y materiales antes de guardar
+    #             print("\n" + "="*40)
+    #             print("📋 RESUMEN DE LA COTIZACIÓN A CREAR")
+    #             print("="*40)
+    #             print("=== Servicios ===")
+    #             total_servicios = 0
+    #             if servicios_seleccionados:
+    #                 for i, servicio in enumerate(servicios_seleccionados, 1):
+    #                     subtotal = servicio["costo_servicio"] * (servicio["cantidad_servicio"] or 1)
+    #                     total_servicios += subtotal
+    #                     print(f"🔹 {i}. {servicio['nombre_servicio']} - {servicio['cantidad_servicio'] or 1} x ${servicio['costo_servicio']:.2f} = ${subtotal:.2f}")
+    #                 print(f"\nTotal de Servicios: ${total_servicios:.2f}")
+    #             else:
+    #                 print("No se agregaron servicios.")
+
+    #             print("\n=== Materiales ===")
+    #             if materiales_seleccionados:
+    #                 for i, material in enumerate(materiales_seleccionados, 1):
+    #                     print(f"🔸 {i}. {material['nombre_material']} - Cantidad: {material['cantidad']}")
+    #                 print(f"\nTotal de Materiales: (El costo se calculará al guardar)") # Nota importante
+    #             else:
+    #                 print("No se agregaron materiales.")
+
+    #             print("="*40)
+
+    #             # Confirmación final
+    #             while True:
+    #                 confirmar = input("\n¿Confirmar creación de cotización con estos servicios y materiales? (s/n): ").lower().strip()
+    #                 if confirmar in ['s', 'n']:
+    #                     break
+    #                 print("❌ Por favor ingrese 's' para confirmar o 'n' para cancelar")
+
+
+    #             if confirmar == 's':
+    #                 # Guardar cotización
+    #                 # try:
+    #                 nueva_cotizacion = controller_cotizacion.crear_cotizacion(cotizacion_data)
+    #                 print(f"\n✅ Cotización creada con ID: {nueva_cotizacion.id_cotizacion}")
+
+    #                 repository_cotizacion_servicio = CotizacionServicioRepository(connection_string)
+    #                 for servicio_data in servicios_seleccionados:
+    #                     nueva_cotizacion_servicio = CotizacionServicio(
+    #                         id_cotizacion=nueva_cotizacion.id_cotizacion,
+    #                         id_servicio=0,
+    #                         nombre_servicio=servicio_data["nombre_servicio"],
+    #                         descripcion_servicio=servicio_data["descripcion_servicio"],
+    #                         tipo_servicio=servicio_data["tipo_servicio"],
+    #                         costo_servicio=servicio_data["costo_servicio"],
+    #                         cantidad_servicio=servicio_data["cantidad_servicio"],
+    #                         fecha_creacion_servicio=servicio_data["fecha_creacion_servicio"],
+    #                         activo=servicio_data["activo"],
+    #                         usuario_creador_servicio=servicio_data["usuario_creador_servicio"],
+    #                         fecha_actualizacion_servicio=servicio_data["fecha_actualizacion_servicio"]
+    #                     )
+    #                     repository_cotizacion_servicio.create_cotizacion_servicio(nueva_cotizacion_servicio)
+    #                     print(f"✅ Servicio '{servicio_data['nombre_servicio']}' agregado a la cotización.")
+
+    #                 # Guardar materiales en Cotizacion_Material
+    #                 cotizacion_material_controller = CotizacionMaterialController(connection_string)
+    #                 for material in materiales_seleccionados:
+    #                     cotizacion_material_controller.agregar_material_a_cotizacion(
+    #                         id_cotizacion=nueva_cotizacion.id_cotizacion,
+    #                         id_proveedor_material=material['id_proveedor_material'],
+    #                         cantidad=material['cantidad']
+    #                     )
+    #                     print(f"✅ Material '{material['nombre_material']}' agregado a la cotización.")
+
+    #                 # except Exception as e:
+    #                 #     print(f"\n❌ Error al guardar la cotización: {str(e)}")
+    #                 #     input("\nPresione Enter para continuar...")
+    #                 #     limpiar_pantalla()
+    #                 #     continue  # Vuelve al menú principal de cotizaciones
+
+    #             else:
+    #                 print("❌ Operación cancelada")
+    #                 input("\nPresione Enter para continuar...")
+    #                 limpiar_pantalla()
+    #                 continue  # Vuelve al menú principal de cotizaciones
+
+    #             input("\nPresione Enter para continuar...")
+    #             limpiar_pantalla()
+    #             break  # Vuelve al menú principal de cotizaciones
+                    
 
 
 
@@ -666,14 +924,12 @@ while True:
                         materiales_disponibles = material_controller.obtener_todos_materiales()
                         if materiales_disponibles:
                             for material in materiales_disponibles:
-                                # print(f"ID: {material['id_material']}, Nombre: {material['nombre']}, Descripción: {material['descripcion']}")
                                 print(f"ID: {material.id_material}, Nombre: {material.nombre}, Descripción: {material.descripcion}")
                             try:
                                 id_material_seleccionado = int(input("Ingrese el ID del material que desea agregar (o 0 para volver): "))
                                 if id_material_seleccionado == 0:
                                     break
 
-                                # Lógica para obtener o solicitar el id_proveedor_material
                                 id_proveedor_material_seleccionado = input("Ingrese el ID del Proveedor-Material (opcional, deje vacío si no aplica): ")
                                 id_proveedor_material = int(id_proveedor_material_seleccionado) if id_proveedor_material_seleccionado else None
 
@@ -681,23 +937,14 @@ while True:
 
                                 material_info = next((m for m in materiales_disponibles if m.id_material == id_material_seleccionado), None)
    
-                                # if material_info:
-                                #     materiales_seleccionados.append({
-                                #         "id_material": id_material_seleccionado,
-                                #         "nombre_material": material_info.nombre,  # Corrección aquí
-                                #         "cantidad": cantidad_material
-                                #     })
-                                #     print(f"✅ Material '{material_info.nombre}' agregado a la lista.")
-                                # else:
-                                #     print("❌ El ID del material ingresado no es válido.")
                                 if material_info:
                                     materiales_seleccionados.append({
                                         "id_material": id_material_seleccionado,
-                                        "nombre_material": material_info.nombre,  # Corrección aquí
+                                        "nombre_material": material_info.nombre,
                                         "cantidad": cantidad_material,
-                                        "id_proveedor_material": id_proveedor_material  # Agrega esta línea
+                                        "id_proveedor_material": id_proveedor_material
                                     })
-                                    print(f"✅ Material '{material_info.nombre}' agregado a la lista.")
+                                    # print(f"✅ Material '{material_info.nombre}' agregado a la lista.")
                                 else:
                                     print("❌ El ID del material ingresado no es válido.")
 
@@ -711,85 +958,159 @@ while True:
                     else:
                         print("Por favor, ingrese 'si' o 'no'.")
 
-                # Mostrar resumen de servicios y materiales antes de guardar
-                print("\n" + "="*40)
-                print("📋 RESUMEN DE LA COTIZACIÓN A CREAR")
-                print("="*40)
-                print("=== Servicios ===")
+                # ==============================================
+                # NUEVA SECCIÓN DE RESUMEN MEJORADA (REEMPLAZO)
+                # ==============================================
+                print("\n" + "="*60)
+                print("📋 RESUMEN PROFESIONAL DE COTIZACIÓN".center(60))
+                print("="*60)
+
+                # Datos del Cliente
+                print("\n👤 DATOS DEL CLIENTE")
+                print(f"  • Nombre: {cliente_seleccionado.nombre}")
+                print(f"  • Tipo: {cliente_seleccionado.tipo_cliente}")
+                print(f"  • RFC: {cliente_seleccionado.rfc or 'No especificado'}")
+                print(f"  • Teléfono: {cliente_seleccionado.telefono or 'No especificado'}")
+                print(f"  • Correo: {cliente_seleccionado.correo or 'No especificado'}")
+
+                # Datos de la Cotización
+                print("\n📅 DATOS DE LA COTIZACIÓN")
+                print(f"  • Fecha creación: {fecha_creacion_str}")
+                print(f"  • Fecha activación: {fecha_activacion_str}")
+                print(f"  • Observaciones: {observaciones}")
+                print(f"  • Creador: {usuario_creador}")
+
+                # Servicios (Mano de Obra)
+                print("\n🔧 SERVICIOS (MANO DE OBRA)")
                 total_servicios = 0
                 if servicios_seleccionados:
+                    print("-"*60)
+                    print("| {:<3} | {:<20} | {:<10} | {:>10} | {:>8} |".format(
+                        "#", "Nombre", "Tipo", "Costo Unit.", "Subtotal"))
+                    print("-"*60)
+                    
                     for i, servicio in enumerate(servicios_seleccionados, 1):
-                        subtotal = servicio["costo_servicio"] * (servicio["cantidad_servicio"] or 1)
+                        cantidad = servicio["cantidad_servicio"] or 1
+                        subtotal = servicio["costo_servicio"] * cantidad
                         total_servicios += subtotal
-                        print(f"🔹 {i}. {servicio['nombre_servicio']} - {servicio['cantidad_servicio'] or 1} x ${servicio['costo_servicio']:.2f} = ${subtotal:.2f}")
-                    print(f"\nTotal de Servicios: ${total_servicios:.2f}")
+                        print("| {:<3} | {:<20} | {:<10} | {:>10.2f} | {:>8.2f} |".format(
+                            i,
+                            servicio["nombre_servicio"][:20],
+                            (servicio["tipo_servicio"] or "-")[:10],
+                            servicio["costo_servicio"],
+                            subtotal
+                        ))
+                    
+                    print("-"*60)
+                    print(f"💰 TOTAL SERVICIOS: ${total_servicios:.2f}".rjust(59))
                 else:
-                    print("No se agregaron servicios.")
+                    print("  No se agregaron servicios")
 
-                print("\n=== Materiales ===")
+
+                # print("\n📦 MATERIALES")
+                # total_materiales = 0
+                # if materiales_seleccionados:
+                #     print("-"*65)
+                #     print("| {:<3} | {:<20} | {:>8} | {:>12} | {:>10} |".format(
+                #         "#", "Nombre Material", "Cantidad", "Costo Unit.", "Subtotal"))
+                #     print("-"*65)
+
+                #     for i, material in enumerate(materiales_seleccionados, 1):
+                #         cantidad = material["cantidad"]
+                        
+                #         # Simulación de costo unitario (si no tienes costo aún, usa un costo fijo o 0.0 provisional)
+                #         costo_unitario = 50.00  # ❗ Aquí deberías obtener el costo real del material
+                #         subtotal = float(cantidad) * costo_unitario
+                #         total_materiales += subtotal
+
+                #         print("| {:<3} | {:<20} | {:>8} | {:>12.2f} | {:>10.2f} |".format(
+                #             i,
+                #             material["nombre_material"][:20],
+                #             str(cantidad),
+                #             costo_unitario,
+                #             subtotal
+                #         ))
+                #     print("-"*65)
+                #     print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(64))
+                # else:
+                #     print("  No se agregaron materiales")
+
+                print("\n📦 MATERIALES")
+                total_materiales = 0
+                proveedor_material_repository = ProveedorMaterialRepository(connection_string)
                 if materiales_seleccionados:
+                    print("-" * 65)
+                    print("| {:<3} | {:<20} | {:>8} | {:>12} | {:>10} |".format(
+                        "#", "Nombre Material", "Cantidad", "Precio", "Subtotal"))
+                    print("-" * 65)
+
                     for i, material in enumerate(materiales_seleccionados, 1):
-                        print(f"🔸 {i}. {material['nombre_material']} - Cantidad: {material['cantidad']}")
-                    print(f"\nTotal de Materiales: (El costo se calculará al guardar)") # Nota importante
+                        cantidad = material["cantidad"]
+
+                        # 🔥 Obtiene el precio real desde Proveedor_Material
+                        # vinculo = ProveedorMaterialRepository.obtener_vinculo(material["id_proveedor_material"])
+                        vinculo = proveedor_material_repository.obtener_vinculo(material["id_proveedor_material"])
+
+                        if vinculo:
+                            precio = float(vinculo.precio)
+                        else:
+                            precio = 0.0  # O podrías poner un mensaje de error si quieres
+
+                        subtotal = float(cantidad) * precio
+                        total_materiales += subtotal
+
+                        print("| {:<3} | {:<20} | {:>8} | {:>12.2f} | {:>10.2f} |".format(
+                            i,
+                            material["nombre_material"][:20],
+                            str(cantidad),
+                            precio,
+                            subtotal
+                        ))
+
+                    print("-" * 65)
+                    print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(64))
                 else:
-                    print("No se agregaron materiales.")
+                    print("  No se agregaron materiales")
 
-                print("="*40)
 
-                # Confirmación final
+                iva_servicios = total_servicios * 0.16
+                total_servicios_con_iva = total_servicios + iva_servicios
+
+                # Resumen Final
+                print("\n" + "="*60)
+                print("🧮 RESUMEN FINAL".center(60))
+                print("-"*60)
+                print(f"  Total Servicios (sin IVA): ${total_servicios:.2f}".rjust(59))
+                print(f"  IVA 16% Servicios: ${iva_servicios:.2f}".rjust(59))
+                print(f"  Total Servicios (con IVA): ${total_servicios_con_iva:.2f}".rjust(59))
+                print(f"  Total Materiales: ${total_materiales:.2f}".rjust(59))
+                print("-"*60)
+                gran_total = total_servicios_con_iva + total_materiales
+                print(f"  GRAN TOTAL: ${gran_total:.2f}".rjust(59))
+                print("="*60)
+
+
+                # Confirmación final mejorada
                 while True:
-                    confirmar = input("\n¿Confirmar creación de cotización con estos servicios y materiales? (s/n): ").lower().strip()
-                    if confirmar in ['s', 'n']:
+                    """Muestra un menú de confirmación estilizado."""
+                    print("\n╔══════════════════════════════════════╗")
+                    print("║        Opciones de Cotización         ║")
+                    print("╠══════════════════════════════════════╣")
+                    print("║ [1] Guardar Cotización             ║")
+                    print("║ [2] Editar Cotización              ║")
+                    print("║ [3] Cancelar Operación               ║")
+                    print("╚══════════════════════════════════════╝")
+                    confirmar = input("\nSeleccione una opción (1-3): ").strip()
+                    if confirmar in ['1', '2', '3']:
                         break
-                    print("❌ Por favor ingrese 's' para confirmar o 'n' para cancelar")
+                    print("❌ Opción inválida. Por favor ingrese 1, 2 o 3")
 
-                # if confirmar == 's':
-                #     # Guardar cotización
-                #     try:
-                #         nueva_cotizacion = controller_cotizacion.crear_cotizacion(cotizacion_data)
-                #         print(f"\n✅ Cotización creada con ID: {nueva_cotizacion.id_cotizacion}")
-
-                #         repository_cotizacion_servicio = CotizacionServicioRepository(connection_string)
-                #         for servicio_data in servicios_seleccionados:
-                #             nueva_cotizacion_servicio = CotizacionServicio(
-                #                 id_cotizacion=nueva_cotizacion.id_cotizacion,
-                #                 id_servicio=0,
-                #                 nombre_servicio=servicio_data["nombre_servicio"],
-                #                 descripcion_servicio=servicio_data["descripcion_servicio"],
-                #                 tipo_servicio=servicio_data["tipo_servicio"],
-                #                 costo_servicio=servicio_data["costo_servicio"],
-                #                 cantidad_servicio=servicio_data["cantidad_servicio"],
-                #                 fecha_creacion_servicio=servicio_data["fecha_creacion_servicio"],
-                #                 activo=servicio_data["activo"],
-                #                 usuario_creador_servicio=servicio_data["usuario_creador_servicio"],
-                #                 fecha_actualizacion_servicio=servicio_data["fecha_actualizacion_servicio"]
-                #             )
-                #             repository_cotizacion_servicio.create_cotizacion_servicio(nueva_cotizacion_servicio)
-                #             print(f"✅ Servicio '{servicio_data['nombre_servicio']}' agregado a la cotización.")
-
-                #         # Guardar materiales en Cotizacion_Material
-                #         cotizacion_material_controller = CotizacionMaterialController(connection_string)
-                #         for material in materiales_seleccionados:
-                #             cotizacion_material_controller.agregar_material_a_cotizacion(
-                #                 id_cotizacion=nueva_cotizacion.id_cotizacion,
-                #                 id_proveedor_material=material['id_proveedor_material'],
-                #                 cantidad=material['cantidad']
-                #             )
-                #             print(f"✅ Material '{material['nombre_material']}' agregado a la cotización.")
-
-                #     except Exception as e:
-                #         print(f"\n❌ Error al guardar la cotización: {str(e)}")
-                #         input("\nPresione Enter para continuar...")
-                #         limpiar_pantalla()
-                #         continue  # Vuelve al menú principal de cotizaciones
-
-
-                if confirmar == 's':
+                if confirmar == '1':
                     # Guardar cotización
-                    # try:
                     nueva_cotizacion = controller_cotizacion.crear_cotizacion(cotizacion_data)
                     print(f"\n✅ Cotización creada con ID: {nueva_cotizacion.id_cotizacion}")
-
+                    
+                    # Guardar servicios
                     repository_cotizacion_servicio = CotizacionServicioRepository(connection_string)
                     for servicio_data in servicios_seleccionados:
                         nueva_cotizacion_servicio = CotizacionServicio(
@@ -807,8 +1128,8 @@ while True:
                         )
                         repository_cotizacion_servicio.create_cotizacion_servicio(nueva_cotizacion_servicio)
                         print(f"✅ Servicio '{servicio_data['nombre_servicio']}' agregado a la cotización.")
-
-                    # Guardar materiales en Cotizacion_Material
+                    
+                    # Guardar materiales
                     cotizacion_material_controller = CotizacionMaterialController(connection_string)
                     for material in materiales_seleccionados:
                         cotizacion_material_controller.agregar_material_a_cotizacion(
@@ -817,15 +1138,15 @@ while True:
                             cantidad=material['cantidad']
                         )
                         print(f"✅ Material '{material['nombre_material']}' agregado a la cotización.")
-
-                    # except Exception as e:
-                    #     print(f"\n❌ Error al guardar la cotización: {str(e)}")
-                    #     input("\nPresione Enter para continuar...")
-                    #     limpiar_pantalla()
-                    #     continue  # Vuelve al menú principal de cotizaciones
-
-                else:
-                    print("❌ Operación cancelada")
+                    
+                    print("✅ Todos los elementos se guardaron correctamente")
+                    
+                elif confirmar == '2':
+                    print("\n✏️ Redirigiendo a edición...")
+                    continue  # Vuelve al inicio del bucle
+                    
+                elif confirmar == '3':
+                    print("\n❌ Operación cancelada por el usuario")
                     input("\nPresione Enter para continuar...")
                     limpiar_pantalla()
                     continue  # Vuelve al menú principal de cotizaciones
@@ -833,7 +1154,6 @@ while True:
                 input("\nPresione Enter para continuar...")
                 limpiar_pantalla()
                 break  # Vuelve al menú principal de cotizaciones
-                    
             elif entrada_cotizacion.opcionSub == "2":
                 print("Has seleccionado editar una cotizacion.")
                 break
@@ -936,60 +1256,60 @@ while True:
                     validar_campo(datos_proveedor["rfc"], "RFC", "rfc")
                     validar_campo(datos_proveedor["direccion"], "dirección", "direccion")
                     
-                    try:
-                        if errores:
-                            print("\n❌ Errores encontrados:")
-                            print("\n".join(errores))
-                            input("\nPresione Enter para corregir los datos...")
-                            limpiar_pantalla()
-                            continue
+                    # try:
+                    if errores:
+                        print("\n❌ Errores encontrados:")
+                        print("\n".join(errores))
+                        input("\nPresione Enter para corregir los datos...")
+                        limpiar_pantalla()
+                        continue
 
-                        # Mostrar resumen
-                        print("\n" + "="*40)
-                        print("📋 RESUMEN DEL PROVEEDOR A REGISTRAR")
-                        print("="*40)
-                        print(f"🔹 Nombre/Razón Social: {datos_proveedor['nombre']}")
-                        print(f"🔹 Persona de Contacto: {datos_proveedor['contacto']}")
-                        print(f"🔹 Teléfono: {datos_proveedor['telefono']}")
-                        print(f"🔹 Email: {datos_proveedor['correo']}")
-                        print(f"🔹 RFC: {datos_proveedor['rfc']}")
-                        print(f"🔹 Dirección: {datos_proveedor['direccion']}")
-                        print("="*40)
+                    # Mostrar resumen
+                    print("\n" + "="*40)
+                    print("📋 RESUMEN DEL PROVEEDOR A REGISTRAR")
+                    print("="*40)
+                    print(f"🔹 Nombre/Razón Social: {datos_proveedor['nombre']}")
+                    print(f"🔹 Persona de Contacto: {datos_proveedor['contacto']}")
+                    print(f"🔹 Teléfono: {datos_proveedor['telefono']}")
+                    print(f"🔹 Email: {datos_proveedor['correo']}")
+                    print(f"🔹 RFC: {datos_proveedor['rfc']}")
+                    print(f"🔹 Dirección: {datos_proveedor['direccion']}")
+                    print("="*40)
+                    
+                    # Validación de confirmación
+                    while True:
+                        confirmar = input("\n¿Confirmar creación de proveedor? (s/n): ").lower().strip()
+                        if confirmar not in ['s', 'n']:
+                            print("❌ Por favor ingrese 's' para confirmar o 'n' para cancelar")
+                            continue
+                        break
                         
-                        # Validación de confirmación
-                        while True:
-                            confirmar = input("\n¿Confirmar creación de proveedor? (s/n): ").lower().strip()
-                            if confirmar not in ['s', 'n']:
-                                print("❌ Por favor ingrese 's' para confirmar o 'n' para cancelar")
-                                continue
-                            break
-                            
-                        if confirmar != 's':
-                            print("❌ Operación cancelada")
-                            limpiar_pantalla()
-                            break
-                        
-                        # Crear proveedor
-                        proveedor_creado = controller.crear_proveedor({
-                            'nombre': datos_proveedor["nombre"],
-                            'contacto': datos_proveedor["contacto"],
-                            'telefono': datos_proveedor["telefono"],
-                            'correo': datos_proveedor["correo"].lower(),
-                            'rfc': datos_proveedor["rfc"],
-                            'direccion': datos_proveedor["direccion"]
-                        })
-                        
-                        if proveedor_creado:
-                            print(f"\n✅ Proveedor creado exitosamente con ID: {proveedor_creado.id_proveedor}")
-                            input("\nPresione Enter para continuar...")
-                            limpiar_pantalla()
-                            break
-                        else:
-                            print("\n❌ Error al crear el proveedor")
-                            
-                    except Exception as e:
-                        print(f"\n❌ Error inesperado: {str(e)}")
+                    if confirmar != 's':
+                        print("❌ Operación cancelada")
+                        limpiar_pantalla()
+                        break
+                    
+                    # Crear proveedor
+                    proveedor_creado = controller.crear_proveedor({
+                        'nombre': datos_proveedor["nombre"],
+                        'contacto': datos_proveedor["contacto"],
+                        'telefono': datos_proveedor["telefono"],
+                        'correo': datos_proveedor["correo"].lower(),
+                        'rfc': datos_proveedor["rfc"],
+                        'direccion': datos_proveedor["direccion"]
+                    })
+                    
+                    if proveedor_creado:
+                        print(f"\n✅ Proveedor creado exitosamente con ID: {proveedor_creado.id_proveedor}")
                         input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        break
+                    else:
+                        print("\n❌ Error al crear el proveedor")
+                            
+                    # except Exception as e:
+                    #     print(f"\n❌ Error inesperado: {str(e)}")
+                    #     input("\nPresione Enter para continuar...")
 
         
                     
@@ -1384,88 +1704,90 @@ while True:
                         break
 
                     # Crear material
-                    try:
-                        material_creado = controller.crear_material({
-                            'nombre': datos_material['nombre'],
-                            'descripcion': datos_material['descripcion'],
-                            'unidad_medida': datos_material['unidad_medida'],
-                            'marca': datos_material['marca'],
-                            'categoria': datos_material['categoria'],
-                            'fecha_registro': datetime.now()
-                        })
+                    # try:
+                    material_creado = controller.crear_material({
+                        'nombre': datos_material['nombre'],
+                        'descripcion': datos_material['descripcion'],
+                        'unidad_medida': datos_material['unidad_medida'],
+                        'marca': datos_material['marca'],
+                        'categoria': datos_material['categoria'],
+                        'fecha_registro': datetime.now()
+                    })
 
-                        if not material_creado:
-                            print("\n❌ Error al crear el material")
-                            continue
+                    if not material_creado:
+                        print("\n❌ Error al crear el material")
+                        continue
 
-                        print(f"\n✅ Material creado exitosamente (ID: {material_creado.id_material})")
+                    print(f"\n✅ Material creado exitosamente (ID: {material_creado.id_material})")
 
-                        # Sección de vinculación con proveedor
-                        # if input("\n¿Vincular con proveedor ahora? (s/n): ").lower() != 's':
-                        #     break
+                    # Sección de vinculación con proveedor
+                    # if input("\n¿Vincular con proveedor ahora? (s/n): ").lower() != 's':
+                    #     break
 
-                        controller_proveedor = ProveedorController(connection_string)
-                        controller_proveedor_material = ProveedorMaterialController(connection_string)
+                    controller_proveedor = ProveedorController(connection_string)
+                    controller_proveedor_material = ProveedorMaterialController(connection_string)
 
-                        proveedores = controller_proveedor.obtener_todos_proveedores()
-                        if not proveedores:
-                            print("\nℹ️ No hay proveedores registrados")
-                            input("\nPresione Enter para continuar...")
-                            break
+                    proveedores = controller_proveedor.obtener_todos_proveedores()
+                    if not proveedores:
+                        print("\nℹ️ No hay proveedores registrados")
+                        input("\nPresione Enter para continuar...")
+                        break
 
-                        while True:
-                            limpiar_pantalla()
-                            print("\n=== VINCULAR MATERIAL ===")
-                            print(f"Material: {material_creado.nombre} (ID: {material_creado.id_material})")
-                            print("\nProveedores disponibles:")
-                            for p in proveedores:
-                                print(f"ID: {p.id_proveedor} - {p.nombre}")
-                            print("\nIngrese '0' para cancelar")
+                    while True:
+                        limpiar_pantalla()
+                        print("\n=== VINCULAR MATERIAL ===")
+                        print(f"Material: {material_creado.nombre} (ID: {material_creado.id_material})")
+                        print("\nProveedores disponibles:")
+                        for p in proveedores:
+                            print(f"ID: {p.id_proveedor} - {p.nombre}")
+                        print("\nIngrese '0' para cancelar")
 
-                            try:
-                                id_proveedor = int(input("\nID del proveedor a vincular: "))
-                                if id_proveedor == 0:
-                                    break
+                        try:
+                            id_proveedor = int(input("\nID del proveedor a vincular: "))
+                            if id_proveedor == 0:
+                                break
 
-                                proveedor = controller_proveedor.obtener_proveedor(id_proveedor)
-                                if not proveedor:
-                                    print("\n❌ Proveedor no encontrado")
-                                    input("\nPresione Enter para continuar...")
-                                    continue
+                            proveedor = controller_proveedor.obtener_proveedor(id_proveedor)
+                            if not proveedor:
+                                print("\n❌ Proveedor no encontrado")
+                                input("\nPresione Enter para continuar...")
+                                continue
 
-                                precio = validar_campo(
-                                    input("Precio ofrecido (*): $").strip(),
-                                    "precio",
-                                    "decimal"
-                                )
-                                if precio is None:
-                                    input("\nPresione Enter para continuar...")
-                                    continue
+                            precio = validar_campo(
+                                input("Precio ofrecido (*): $").strip(),
+                                "precio",
+                                "decimal"
+                            )
+                            if precio is None:
+                                input("\nPresione Enter para continuar...")
+                                continue
 
-                                # # Confirmar vinculación
-                                # print(f"\nℹ️ Se vinculará a: {proveedor.nombre} por ${precio:.2f}")
-                                # if input("¿Confirmar? (s/n): ").lower() != 's':
-                                #     continue
+                            # # Confirmar vinculación
+                            # print(f"\nℹ️ Se vinculará a: {proveedor.nombre} por ${precio:.2f}")
+                            # if input("¿Confirmar? (s/n): ").lower() != 's':
+                            #     continue
 
-                                if controller_proveedor_material.vincular_material(
-                                    id_proveedor,
-                                    material_creado.id_material,
-                                    precio
-                                ):
-                                    print(f"\n✅ Vinculado exitosamente a {material_creado.nombre} con {proveedor.nombre} con precio de ${precio:.2f} ")
-                                    input("\nPresione Enter para continuar...")
-                                    break
-                                else:
-                                    print("\n❌ Error al vincular")
-                                    input("\nPresione Enter para continuar...")
-
-                            except ValueError:
-                                print("\n❌ Ingrese un ID numérico válido")
+                            if controller_proveedor_material.vincular_material(
+                                id_proveedor,
+                                material_creado.id_material,
+                                precio
+                            ):
+                                print(f"\n✅ Vinculado exitosamente a {material_creado.nombre} con {proveedor.nombre} con precio de ${precio:.2f} ")
+                                input("\nPresione Enter para continuar...")
+                                limpiar_pantalla()
+                                break
+                            else:
+                                print("\n❌ Error al vincular")
                                 input("\nPresione Enter para continuar...")
 
-                    except Exception as e:
-                        print(f"\n❌ Error inesperado: {str(e)}")
-                        input("\nPresione Enter para continuar...")
+                        except ValueError:
+                            print("\n❌ Ingrese un ID numérico válido")
+                            input("\nPresione Enter para continuar...")
+                    break
+
+                    # except Exception as e:
+                    #     print(f"\n❌ Error inesperado: {str(e)}")
+                    #     input("\nPresione Enter para continuar...")
            
 
                     
@@ -1746,6 +2068,7 @@ while True:
 
                     input("\nPresione ENTER para continuar...")
                     limpiar_pantalla()
+                    break
 
 
             # elif opcion_material.opcionSub == "3":

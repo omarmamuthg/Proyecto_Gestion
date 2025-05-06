@@ -279,22 +279,40 @@
     #     except Exception as e:
     #         print(f"❌ Error en controlador: {str(e)}")
     #         return False
+
+
+#proveedor_material_controler
 from Repositorys.proveedor_material_repository import ProveedorMaterialRepository
 from Repositorys.proveedor_repository import ProveedorRepository
 from Repositorys.material_repository import MaterialRepository
+
 import pyodbc
 from decimal import Decimal
-
+connection_string = (
+    'DRIVER={ODBC Driver 17 for SQL Server};'
+    'SERVER=OMARLAPTOP;'
+    'DATABASE=DB_SIGA;'
+    'UID=DB_SIGA;'
+    'PWD=db_siga'
+)
 class ProveedorMaterialController:
 
+    # def __init__(self, connection_string):
+    #     # Establece la conexión principal
+    #     self.conn = pyodbc.connect(connection_string)
+        
+    #     # Pasa la conexión establecida a los repositorios
+    #     self.proveedor_material_repo = ProveedorMaterialRepository(self.conn)
+    #     self.proveedor_repo = ProveedorRepository(connection_string)  # O usa self.conn si también lo modificas
+    #     self.material_repo = MaterialRepository(connection_string)    # O usa self.conn si también lo modificas
     def __init__(self, connection_string):
         # Establece la conexión principal
         self.conn = pyodbc.connect(connection_string)
         
-        # Pasa la conexión establecida a los repositorios
-        self.proveedor_material_repo = ProveedorMaterialRepository(self.conn)
-        self.proveedor_repo = ProveedorRepository(connection_string)  # O usa self.conn si también lo modificas
-        self.material_repo = MaterialRepository(connection_string)    # O usa self.conn si también lo modificas
+        # Pasa el connection_string, no la conexión
+        self.proveedor_material_repo = ProveedorMaterialRepository(connection_string)
+        self.proveedor_repo = ProveedorRepository(connection_string)
+        self.material_repo = MaterialRepository(connection_string)
 
     def __del__(self):
         if hasattr(self, 'conn') and self.conn:
