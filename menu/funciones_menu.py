@@ -23,6 +23,10 @@ class MenuInput(BaseModel):
 class SubMenuInput(BaseModel):
     opcionSub: Literal["1", "2", "3", "4", "5", "6"]  # Solo acepta estas tres cadenas como entrada
 
+# Clase que valida que solo se pueda ingresar una de las opciones válidas del menú (1, 2 o 3)
+class SubMenuInput_coti(BaseModel):
+    opcionSub: Literal["1", "2", "3", "4"]  # Solo acepta estas tres cadenas como entrada
+
 # Función que limpia la pantalla en sistemas operativos Windows
 def limpiar_pantalla():
     os.system("cls")
@@ -57,11 +61,9 @@ def menu_cotizaciones():
     '''
     print("\n==== Menú Cotizaciones ====")
     print("1. Crear Cotización")
-    print("2. Editar Cotizaciones")
+    print("2. Buscar Cotizaciones")
     print("3. Eliminar Cotización")
-    print("4. Buscar Cotizacion") 
-    print("5. Listar Cotizaciones")  # Nueva opción
-    print("6. Volver al menú principal")
+    print("4. Volver al menú principal")
 
 # Función que imprime el menú de opciones relacionadas con los proveedores
 def menu_proveedores():
@@ -110,6 +112,16 @@ def pedir_opcion_submenu():
         opcion = input("Ingresa una opción deseada (1-6): ")
         try:
             return SubMenuInput(opcionSub=opcion)  
+        except ValidationError:
+            print("❌ Entrada inválida. Solo se permite del 1 al 6.")  # Muestra mensaje si la opción es inválida
+            print("---")
+
+# Función para pedir y validar una opción del menú principal
+def pedir_opcion_submenu_coti():
+    while True:
+        opcion = input("Ingresa una opción deseada (1-6): ")
+        try:
+            return SubMenuInput_coti(opcionSub=opcion)  
         except ValidationError:
             print("❌ Entrada inválida. Solo se permite del 1 al 6.")  # Muestra mensaje si la opción es inválida
             print("---")

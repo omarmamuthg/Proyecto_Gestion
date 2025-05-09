@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 from datetime import datetime
 import uuid 
+from pdf import generar_pdf_cotizacion
 
 # Esto permite que Python encuentre tus módulos
 sys.path.append(str(Path(__file__).parent.parent))
@@ -30,7 +31,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 # from Models.cotizacion_servicio import CotizacionServicio
 # from Repositorys.cotizacion_servicio_repository import CotizacionServicioRepository
 # from Repositorys.proveedor_material_repository import ProveedorMaterialRepository
-from funciones_menu import Logo_siga, menu_principal, menu_clientes, pedir_opcion_menu, pedir_opcion_submenu, menu_cotizaciones, menu_proveedores, limpiar_pantalla, SubMenuInput, MenuInput, menu_materiales
+from funciones_menu import Logo_siga, menu_principal, menu_clientes, pedir_opcion_menu, pedir_opcion_submenu, pedir_opcion_submenu_coti, menu_cotizaciones, menu_proveedores, limpiar_pantalla, SubMenuInput, MenuInput, menu_materiales
 from typing import Literal
 import os
 from pydantic import BaseModel, ValidationError
@@ -790,7 +791,7 @@ while True:
         while True:  # Bucle principal de cotizaciones
             print("Has seleccionado Cotizaciones.")
             menu_cotizaciones()
-            entrada_cotizacion = pedir_opcion_submenu()
+            entrada_cotizacion = pedir_opcion_submenu_coti()
             limpiar_pantalla()
             if entrada_cotizacion.opcionSub == "1":
                 print("Has seleccionado agregar una cotizacion.")
@@ -1090,15 +1091,79 @@ while True:
                 print("="*60)
 
 
+                # # Confirmación final mejorada
+                # while True:
+                #     """Muestra un menú de confirmación estilizado."""
+                #     print("\n╔══════════════════════════════════════╗")
+                #     print("║        Opciones de Cotización         ║")
+                #     print("╠══════════════════════════════════════╣")
+                #     print("║ [1] Guardar Cotización             ║")
+                #     print("║ [2] Editar Cotización              ║")
+                #     print("║ [3] Cancelar Operación               ║")
+                #     print("╚══════════════════════════════════════╝")
+                #     confirmar = input("\nSeleccione una opción (1-3): ").strip()
+                #     if confirmar in ['1', '2', '3']:
+                #         break
+                #     print("❌ Opción inválida. Por favor ingrese 1, 2 o 3")
+
+                # if confirmar == '1':
+                #     # Guardar cotización
+                #     nueva_cotizacion = controller_cotizacion.crear_cotizacion(cotizacion_data)
+                #     print(f"\n✅ Cotización creada con ID: {nueva_cotizacion.id_cotizacion}")
+                    
+                #     # Guardar servicios
+                #     repository_cotizacion_servicio = CotizacionServicioRepository(connection_string)
+                #     for servicio_data in servicios_seleccionados:
+                #         nueva_cotizacion_servicio = CotizacionServicio(
+                #             id_cotizacion=nueva_cotizacion.id_cotizacion,
+                #             id_servicio=0,
+                #             nombre_servicio=servicio_data["nombre_servicio"],
+                #             descripcion_servicio=servicio_data["descripcion_servicio"],
+                #             tipo_servicio=servicio_data["tipo_servicio"],
+                #             costo_servicio=servicio_data["costo_servicio"],
+                #             cantidad_servicio=servicio_data["cantidad_servicio"],
+                #             fecha_creacion_servicio=servicio_data["fecha_creacion_servicio"],
+                #             activo=servicio_data["activo"],
+                #             usuario_creador_servicio=servicio_data["usuario_creador_servicio"],
+                #             fecha_actualizacion_servicio=servicio_data["fecha_actualizacion_servicio"]
+                #         )
+                #         repository_cotizacion_servicio.create_cotizacion_servicio(nueva_cotizacion_servicio)
+                #         print(f"✅ Servicio '{servicio_data['nombre_servicio']}' agregado a la cotización.")
+                    
+                #     # Guardar materiales
+                #     cotizacion_material_controller = CotizacionMaterialController(connection_string)
+                #     for material in materiales_seleccionados:
+                #         cotizacion_material_controller.agregar_material_a_cotizacion(
+                #             id_cotizacion=nueva_cotizacion.id_cotizacion,
+                #             id_proveedor_material=material['id_proveedor_material'],
+                #             cantidad=material['cantidad']
+                #         )
+                #         print(f"✅ Material '{material['nombre_material']}' agregado a la cotización.")
+                    
+                #     print("✅ Todos los elementos se guardaron correctamente")
+                    
+                # elif confirmar == '2':
+                #     print("\n✏️ Redirigiendo a edición...")
+                #     continue  # Vuelve al inicio del bucle
+                    
+                # elif confirmar == '3':
+                #     print("\n❌ Operación cancelada por el usuario")
+                #     input("\nPresione Enter para continuar...")
+                #     limpiar_pantalla()
+                #     continue  # Vuelve al menú principal de cotizaciones
+
+                # input("\nPresione Enter para continuar...")
+                # limpiar_pantalla()
+                # break  # Vuelve al menú principal de cotizaciones
                 # Confirmación final mejorada
                 while True:
                     """Muestra un menú de confirmación estilizado."""
                     print("\n╔══════════════════════════════════════╗")
                     print("║        Opciones de Cotización         ║")
                     print("╠══════════════════════════════════════╣")
-                    print("║ [1] Guardar Cotización             ║")
-                    print("║ [2] Editar Cotización              ║")
-                    print("║ [3] Cancelar Operación               ║")
+                    print("║ [1] Guardar Cotización                ║")
+                    print("║ [2] Editar Cotización                 ║")
+                    print("║ [3] Cancelar Operación                ║")
                     print("╚══════════════════════════════════════╝")
                     confirmar = input("\nSeleccione una opción (1-3): ").strip()
                     if confirmar in ['1', '2', '3']:
@@ -1141,6 +1206,44 @@ while True:
                     
                     print("✅ Todos los elementos se guardaron correctamente")
                     
+                    # Preguntar si desea generar PDF
+                    generar_pdf = input("\n¿Desea generar un PDF de esta cotización? (s/n): ").lower()
+                    if generar_pdf == 's':
+                        try:
+                            # Obtener los materiales con precios desde la base de datos
+                            cotizacion_material_repo = CotizacionMaterialRepository(connection_string)
+                            materiales_bd = cotizacion_material_repo.obtener_materiales_por_cotizacion(nueva_cotizacion.id_cotizacion)
+                            
+                            # Obtener los servicios desde la base de datos
+                            cotizacion_servicio_repo = CotizacionServicioRepository(connection_string)
+                            servicios_bd = cotizacion_servicio_repo.get_servicios_por_cotizacion(nueva_cotizacion.id_cotizacion)
+                            
+                            # Generar el PDF
+                            ruta_pdf = generar_pdf_cotizacion(
+                                cotizacion=nueva_cotizacion,
+                                cliente=cliente_seleccionado,
+                                servicios=servicios_bd,
+                                materiales=materiales_bd
+                            )
+                            
+                            print(f"\n✅ PDF generado correctamente: {ruta_pdf}")
+                            
+                            # Opcionalmente, abrir el PDF automáticamente
+                            abrir_pdf = input("¿Desea abrir el PDF ahora? (s/n): ").lower()
+                            if abrir_pdf == 's':
+                                import os
+                                import platform
+                                
+                                if platform.system() == 'Windows':
+                                    os.startfile(ruta_pdf)
+                                elif platform.system() == 'Darwin':  # macOS
+                                    os.system(f'open "{ruta_pdf}"')
+                                else:  # Linux
+                                    os.system(f'xdg-open "{ruta_pdf}"')
+                                    
+                        except Exception as e:
+                            print(f"❌ Error al generar el PDF: {str(e)}")
+                    
                 elif confirmar == '2':
                     print("\n✏️ Redirigiendo a edición...")
                     continue  # Vuelve al inicio del bucle
@@ -1156,10 +1259,268 @@ while True:
                 break  # Vuelve al menú principal de cotizaciones
             elif entrada_cotizacion.opcionSub == "2":
                 print("Has seleccionado editar una cotizacion.")
-                break
+############elif entrada_cotizacion.opcionSub == "2":  # Ver cotizaciones
+                print("\n=== COTIZACIONES REGISTRADAS ===")
+                
+                controller_cotizacion = CotizacionController(connection_string)
+                cotizaciones = controller_cotizacion.obtener_todas_cotizaciones()
+                
+                if not cotizaciones:
+                    print("No hay cotizaciones registradas.")
+                    input("\nPresione Enter para continuar...")
+                    limpiar_pantalla()
+                    continue
+                
+                # Mostrar lista de cotizaciones
+                print("\n" + "-"*80)
+                print("| {:<5} | {:<20} | {:<12} | {:<15} | {:<15} |".format(
+                    "ID", "Cliente", "Fecha", "Usuario", "Estado"))
+                print("-"*80)
+                
+                for cotizacion in cotizaciones:
+                    estado = "Activa"
+                    if cotizacion.fecha_cancelacion:
+                        estado = "Cancelada"
+                    elif cotizacion.fecha_finalizacion:
+                        estado = "Finalizada"
+                    
+                    print("| {:<5} | {:<20} | {:<12} | {:<15} | {:<15} |".format(
+                        cotizacion.id_cotizacion,
+                        cotizacion.nombre_cliente[:20],
+                        cotizacion.fecha_creacion.strftime('%Y-%m-%d'),
+                        cotizacion.usuario_creador[:15],
+                        estado
+                    ))
+                
+                print("-"*80)
+                
+                # Opción para ver detalles de una cotización
+                while True:
+                    id_seleccionado = input("\nIngrese el ID de la cotización para ver detalles (o '0' para volver): ")
+                    
+                    if id_seleccionado == "0":
+                        break
+                        
+                    try:
+                        id_cotizacion = int(id_seleccionado)
+                        
+                        # Obtener la cotización
+                        cotizacion = controller_cotizacion.obtener_cotizacion(id_cotizacion)
+                        if not cotizacion:
+                            print("❌ Cotización no encontrada.")
+                            continue
+                        
+                        # Obtener servicios
+                        cotizacion_servicio_repo = CotizacionServicioRepository(connection_string)
+                        servicios = cotizacion_servicio_repo.get_servicios_por_cotizacion(id_cotizacion)
+                        
+                        # Obtener materiales
+                        cotizacion_material_repo = CotizacionMaterialRepository(connection_string)
+                        materiales = cotizacion_material_repo.obtener_materiales_por_cotizacion(id_cotizacion)
+                        
+                        # Mostrar detalles de la cotización con formato similar al de creación
+                        limpiar_pantalla()
+                        print("\n" + "="*60)
+                        print("📋 RESUMEN PROFESIONAL DE COTIZACIÓN".center(60))
+                        print("="*60)
+                        
+                        # Datos del Cliente
+                        print("\n👤 DATOS DEL CLIENTE")
+                        print(f"  • Nombre: {cotizacion.nombre_cliente}")
+                        print(f"  • Tipo: {cotizacion.tipo_cliente}")
+                        print(f"  • RFC: {cotizacion.rfc_cliente or 'No especificado'}")
+                        print(f"  • Teléfono: {cotizacion.telefono_cliente or 'No especificado'}")
+                        print(f"  • Correo: {cotizacion.correo_cliente or 'No especificado'}")
+                        
+                        # Datos de la Cotización
+                        print("\n📅 DATOS DE LA COTIZACIÓN")
+                        print(f"  • Fecha creación: {cotizacion.fecha_creacion.strftime('%Y-%m-%d')}")
+                        fecha_activacion = cotizacion.fecha_activacion.strftime('%Y-%m-%d') if cotizacion.fecha_activacion else "No especificada"
+                        print(f"  • Fecha activación: {fecha_activacion}")
+                        print(f"  • Observaciones: {cotizacion.observaciones}")
+                        print(f"  • Creador: {cotizacion.usuario_creador}")
+                        
+                        # Servicios (Mano de Obra)
+                        print("\n🔧 SERVICIOS (MANO DE OBRA)")
+                        total_servicios = 0
+                        if servicios:
+                            print("-"*60)
+                            print("| {:<3} | {:<20} | {:<10} | {:>10} | {:>8} |".format(
+                                "#", "Nombre", "Tipo", "Costo Unit.", "Subtotal"))
+                            print("-"*60)
+                            
+                            for i, servicio in enumerate(servicios, 1):
+                                cantidad = servicio.cantidad_servicio or 1
+                                subtotal = servicio.costo_servicio * cantidad
+                                total_servicios += subtotal
+                                
+                                print("| {:<3} | {:<20} | {:<10} | {:>10.2f} | {:>8.2f} |".format(
+                                    i,
+                                    servicio.nombre_servicio[:20],
+                                    (servicio.tipo_servicio or "-")[:10],
+                                    servicio.costo_servicio,
+                                    subtotal
+                                ))
+                            
+                            print("-"*60)
+                            print(f"💰 TOTAL SERVICIOS: ${total_servicios:.2f}".rjust(59))
+                        else:
+                            print("  No hay servicios registrados para esta cotización")
+                        
+                        # Materiales
+                        print("\n📦 MATERIALES")
+                        total_materiales = 0
+                        if materiales:
+                            print("-" * 65)
+                            print("| {:<3} | {:<20} | {:<8} | {:>12} | {:>10} |".format(
+                                "#", "Nombre Material", "Cantidad", "Precio", "Subtotal"))
+                            print("-" * 65)
+                            
+                            for i, material in enumerate(materiales, 1):
+                                cantidad = float(material["cantidad"]) if material["cantidad"] else 0
+                                precio = float(material["precio_unitario"]) if material["precio_unitario"] else 0
+                                
+                                subtotal = cantidad * precio
+                                total_materiales += subtotal
+                                
+                                print("| {:<3} | {:<20} | {:<8} | {:>12.2f} | {:>10.2f} |".format(
+                                    i,
+                                    material["nombre_material"][:20],
+                                    cantidad,
+                                    precio,
+                                    subtotal
+                                ))
+                            
+                            print("-" * 65)
+                            print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(64))
+                        else:
+                            print("  No hay materiales registrados para esta cotización")
+                        
+                        # Cálculos finales
+                        iva_servicios = total_servicios * 0.16
+                        total_servicios_con_iva = total_servicios + iva_servicios
+                        
+                        # Resumen Final
+                        print("\n" + "="*60)
+                        print("🧮 RESUMEN FINAL".center(60))
+                        print("-"*60)
+                        print(f"  Total Servicios (sin IVA): ${total_servicios:.2f}".rjust(59))
+                        print(f"  IVA 16% Servicios: ${iva_servicios:.2f}".rjust(59))
+                        print(f"  Total Servicios (con IVA): ${total_servicios_con_iva:.2f}".rjust(59))
+                        print(f"  Total Materiales: ${total_materiales:.2f}".rjust(59))
+                        print("-"*60)
+                        gran_total = total_servicios_con_iva + total_materiales
+                        print(f"  GRAN TOTAL: ${gran_total:.2f}".rjust(59))
+                        print("="*60)
+                        
+                        # Opciones adicionales
+                        print("\n[1] Volver a la lista de cotizaciones")
+                        print("[2] Generar PDF (No implementado)")
+                        print("[3] Enviar por correo (No implementado)")
+                        
+                        opcion = input("\nSeleccione una opción: ")
+                        if opcion == "1":
+                            limpiar_pantalla()
+                            break
+                        else:
+                            print("Funcionalidad no implementada.")
+                            input("\nPresione Enter para continuar...")
+                            limpiar_pantalla()
+                            break
+                            
+                    except ValueError:
+                        print("❌ Por favor ingrese un ID válido.")
+                    except Exception as e:
+                        print(f"❌ Error: {str(e)}")
+                        input("\nPresione Enter para continuar...")
+                        limpiar_pantalla()
+                        break
+                
+                limpiar_pantalla()
+
+
+
+
             elif entrada_cotizacion.opcionSub == "3":
                 print("Has seleccionado eliminar una cotizacion.")
-                break
+                print("\n=== DAR DE BAJA COTIZACIÓN ===")
+                
+                controller_cotizacion = CotizacionController(connection_string)
+                cotizaciones = controller_cotizacion.obtener_todas_cotizaciones(activas_only=True)
+                
+                if not cotizaciones:
+                    print("No hay cotizaciones activas registradas.")
+                    input("\nPresione Enter para continuar...")
+                    limpiar_pantalla()
+                    continue
+                
+                # Mostrar lista de cotizaciones activas
+                print("\n" + "-"*80)
+                print("| {:<5} | {:<20} | {:<12} | {:<15} | {:<15} |".format(
+                    "ID", "Cliente", "Fecha", "Usuario", "Estado"))
+                print("-"*80)
+                
+                for cotizacion in cotizaciones:
+                    print("| {:<5} | {:<20} | {:<12} | {:<15} | {:<15} |".format(
+                        cotizacion.id_cotizacion,
+                        cotizacion.nombre_cliente[:20],
+                        cotizacion.fecha_creacion.strftime('%Y-%m-%d'),
+                        cotizacion.usuario_creador[:15],
+                        "Activa"
+                    ))
+                
+                print("-"*80)
+                
+                # Solicitar ID de la cotización a dar de baja
+                while True:
+                    id_seleccionado = input("\nIngrese el ID de la cotización a dar de baja (o '0' para volver): ")
+                    
+                    if id_seleccionado == "0":
+                        break
+                        
+                    try:
+                        id_cotizacion = int(id_seleccionado)
+                        
+                        # Verificar que la cotización existe y está activa
+                        cotizacion = controller_cotizacion.obtener_cotizacion(id_cotizacion)
+                        if not cotizacion:
+                            print("❌ Cotización no encontrada.")
+                            continue
+                            
+                        if not cotizacion.activo:
+                            print("❌ La cotización ya está inactiva.")
+                            continue
+                        
+                        # Confirmar la baja
+                        print(f"\nCotización seleccionada: #{cotizacion.id_cotizacion} - {cotizacion.nombre_cliente}")
+                        confirmacion = input("¿Está seguro que desea dar de baja esta cotización? (s/n): ").lower()
+                        
+                        if confirmacion == 's':
+                            # Solicitar motivo de cancelación
+                            motivo = input("Ingrese el motivo de la cancelación (opcional): ")
+                            
+                            # Si se proporcionó un motivo, actualizar las observaciones
+                            if motivo:
+                                observaciones_actuales = cotizacion.observaciones or ""
+                                cotizacion.observaciones = f"{observaciones_actuales}\nMotivo de cancelación: {motivo}"
+                                controller_cotizacion.repository.update_cotizacion(id_cotizacion, cotizacion)
+                            
+                            # Marcar como inactiva
+                            if controller_cotizacion.marcar_cotizacion_como_inactiva(id_cotizacion):
+                                print("✅ Cotización dada de baja correctamente.")
+                                input("\nPresione Enter para continuar...")
+                                break
+                        else:
+                            print("Operación cancelada.")
+                            
+                    except ValueError:
+                        print("❌ Por favor ingrese un ID válido.")
+                    except Exception as e:
+                        print(f"❌ Error: {str(e)}")
+                        input("\nPresione Enter para continuar...")
+                        break
+                
+                limpiar_pantalla()
             elif entrada_cotizacion.opcionSub == "4":
                 print("Has seleccionado Buscar Cotizacion.")
                 break

@@ -1,3 +1,5 @@
+
+# CotizacionServicioRepository
 import pyodbc
 from datetime import datetime
 from typing import List, Optional
@@ -129,6 +131,19 @@ class CotizacionServicioRepository:
         )
 
 
+
+    def get_servicios_por_cotizacion(self, id_cotizacion, activos_only=True):
+        """
+        Obtiene todos los servicios asociados a una cotización
+        """
+        query = "SELECT * FROM Cotizacion_Servicio WHERE id_cotizacion = ?"
+        if activos_only:
+            query += " AND activo = 1"
+            
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, id_cotizacion)
+            return [self._row_to_cotizacion_servicio(row) for row in cursor.fetchall()]
 
 
 # #deepseek

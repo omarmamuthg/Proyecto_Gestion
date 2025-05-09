@@ -703,3 +703,41 @@ class CotizacionRepository:
     def obtener_cotizacion(self, id_cotizacion: int) -> Optional[Cotizacion]:
         """Alias en español para get_cotizacion"""
         return self.get_cotizacion(id_cotizacion)
+    def get_all_cotizaciones(self, activos_only: bool = True):
+        """
+        Obtiene todas las cotizaciones, opcionalmente filtrando por las activas
+        """
+        query = "SELECT * FROM Cotizaciones"
+        if activos_only:
+            query += " WHERE activo = 1"
+        query += " ORDER BY fecha_creacion DESC"
+            
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(query)
+            return [self._row_to_cotizacion(row) for row in cursor.fetchall()]
+    def update_cotizacion(self, id_cotizacion: int, cotizacion):
+        """
+        Actualiza los datos de una cotización existente
+        """
+        query = """
+            UPDATE Cotizaciones
+            SET id_cliente = ?, fecha_creacion = ?, fecha_activacion = ?,
+                fecha_finalizacion = ?, fecha_cancelacion = ?, observaciones = ?,
+                usuario_creador = ?, nombre_cliente = ?, correo_cliente = ?,
+                telefono_cliente = ?, tipo_cliente = ?, rfc_cliente = ?, activo = ?
+            WHERE id_cotizacion = ?
+        """
+        params = (
+            cotizacion.id_cliente, cotizacion.fecha_creacion, cotizacion.fecha_activacion,
+            cotizacion.fecha_finalizacion, cotizacion.fecha_cancelacion, cotizacion.observaciones,
+            cotizacion.usuario_creador, cotizacion.nombre_cliente, cotizacion.correo_cliente,
+            cotizacion.telefono_cliente, cotizacion.tipo_cliente, cotizacion.rfc_cliente,
+            cotizacion.activo, id_cotizacion
+        )
+
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            conn.commit()
+            return cursor.rowcount > 0

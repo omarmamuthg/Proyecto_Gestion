@@ -278,3 +278,120 @@ class CotizacionMaterialRepository:
             print(f"❌ Error al eliminar material: {str(e)}")
             self.conn.rollback()
             return False
+
+    # def obtener_materiales_por_cotizacion(self, id_cotizacion):
+    #     """
+    #     Obtiene todos los materiales asociados a una cotización
+    #     """
+    #     try:
+    #         cursor = self.conn.cursor()
+    #         try:
+    #             cursor.execute(
+    #                 """
+    #                 SELECT cm.*, m.nombre as nombre_material, m.unidad_medida, 
+    #                     pm.precio as precio_unitario
+    #                 FROM Cotizacion_Material cm
+    #                 JOIN Materiales m ON cm.id_material = m.id_material
+    #                 LEFT JOIN Proveedor_Material pm ON cm.id_proveedor_material = pm.id_proveedor_material
+    #                 WHERE cm.id_cotizacion = ?
+    #                 """,
+    #                 (id_cotizacion,)
+    #             )
+                
+    #             materiales = []
+    #             columns = [column[0] for column in cursor.description]
+                
+    #             for row in cursor.fetchall():
+    #                 material = {}
+    #                 for i, value in enumerate(row):
+    #                     material[columns[i]] = value
+    #                 materiales.append(material)
+                    
+    #             return materiales
+    #         finally:
+    #             cursor.close()
+    #     except Exception as e:
+    #         print(f"❌ Error al obtener materiales de cotización: {str(e)}")
+    #         return []
+    # def obtener_materiales_por_cotizacion(self, id_cotizacion):
+    #     """
+    #     Obtiene todos los materiales asociados a una cotización
+    #     """
+    #     try:
+    #         cursor = self.conn.cursor()
+    #         try:
+    #             cursor.execute(
+    #                 """
+    #                 SELECT cm.*, m.nombre as nombre_material, m.unidad_medida, 
+    #                     pm.precio as precio_unitario, m.id_material
+    #                 FROM Cotizacion_Material cm
+    #                 JOIN Materiales m ON cm.id_material = m.id_material
+    #                 LEFT JOIN Proveedor_Material pm ON cm.id_proveedor_material = pm.id_proveedor_material
+    #                 WHERE cm.id_cotizacion = ?
+    #                 """,
+    #                 (id_cotizacion,)
+    #             )
+                
+    #             materiales = []
+    #             columns = [column[0] for column in cursor.description]
+                
+    #             for row in cursor.fetchall():
+    #                 material = {}
+    #                 for i, value in enumerate(row):
+    #                     material[columns[i]] = value
+    #                 materiales.append(material)
+                    
+    #             return materiales
+    #         finally:
+    #             cursor.close()
+    #     except Exception as e:
+    #         print(f"❌ Error al obtener materiales de cotización: {str(e)}")
+    #         return []
+
+
+
+
+    def obtener_materiales_por_cotizacion(self, id_cotizacion):
+        """
+        Obtiene todos los materiales asociados a una cotización
+        """
+        try:
+            cursor = self.conn.cursor()
+            try:
+                cursor.execute(
+                    """
+                    SELECT 
+                        cm.id_cotizacion_material,
+                        cm.id_cotizacion,
+                        cm.id_material,
+                        cm.cantidad,
+                        cm.id_proveedor_material,
+                        m.nombre as nombre_material,
+                        m.unidad_medida,
+                        m.descripcion as descripcion_material,
+                        pm.precio as precio_unitario,
+                        p.nombre as nombre_proveedor
+                    FROM Cotizacion_Material cm
+                    JOIN Materiales m ON cm.id_material = m.id_material
+                    LEFT JOIN Proveedor_Material pm ON cm.id_proveedor_material = pm.id_proveedor_material
+                    LEFT JOIN Proveedores p ON pm.id_proveedor = p.id_proveedor
+                    WHERE cm.id_cotizacion = ?
+                    """,
+                    (id_cotizacion,)
+                )
+                
+                materiales = []
+                columns = [column[0] for column in cursor.description]
+                
+                for row in cursor.fetchall():
+                    material = {}
+                    for i, value in enumerate(row):
+                        material[columns[i]] = value
+                    materiales.append(material)
+                    
+                return materiales
+            finally:
+                cursor.close()
+        except Exception as e:
+            print(f"❌ Error al obtener materiales de cotización: {str(e)}")
+            return []
