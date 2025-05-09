@@ -186,3 +186,32 @@ class ProveedorMaterialRepository:
             print(f"❌ Error inesperado: {str(e)}")
             self.conn.rollback()
             return False
+        
+    def obtener_vinculo(self, id_proveedor_material):
+        """
+        Obtiene un vínculo específico entre proveedor y material por su ID
+        """
+        try:
+            query = """
+            SELECT * FROM Proveedor_Material
+            WHERE id_proveedor_material = ?
+            """
+            
+            with self._get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(query, (id_proveedor_material,))
+                row = cursor.fetchone()
+                
+                if row:
+                    from Models.proveedor_material import ProveedorMaterial
+                    return ProveedorMaterial(
+                        id_proveedor_material=row.id_proveedor_material,
+                        id_proveedor=row.id_proveedor,
+                        id_material=row.id_material,
+                        precio=row.precio,
+                        activo=bool(row.activo)
+                    )
+                return None
+        except Exception as e:
+            print(f"❌ Error al obtener vínculo proveedor-material: {str(e)}")
+            return None

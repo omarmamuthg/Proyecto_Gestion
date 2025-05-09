@@ -1259,7 +1259,6 @@ while True:
                 break  # Vuelve al menú principal de cotizaciones
             elif entrada_cotizacion.opcionSub == "2":
                 print("Has seleccionado editar una cotizacion.")
-############elif entrada_cotizacion.opcionSub == "2":  # Ver cotizaciones
                 print("\n=== COTIZACIONES REGISTRADAS ===")
                 
                 controller_cotizacion = CotizacionController(connection_string)
@@ -1367,32 +1366,126 @@ while True:
                         else:
                             print("  No hay servicios registrados para esta cotización")
                         
+                        # # Materiales
+                        # print("\n📦 MATERIALES")
+                        # total_materiales = 0
+                        # if materiales:
+                        #     print("-" * 65)
+                        #     print("| {:<3} | {:<20} | {:<8} | {:>12} | {:>10} |".format(
+                        #         "#", "Nombre Material", "Cantidad", "Precio", "Subtotal"))
+                        #     print("-" * 65)
+                            
+                        #     for i, material in enumerate(materiales, 1):
+                        #         cantidad = float(material["cantidad"]) if material["cantidad"] else 0
+                        #         precio = float(material["precio_unitario"]) if material["precio_unitario"] else 0
+                                
+                        #         subtotal = cantidad * precio
+                        #         total_materiales += subtotal
+                                
+                        #         print("| {:<3} | {:<20} | {:<8} | {:>12.2f} | {:>10.2f} |".format(
+                        #             i,
+                        #             material["nombre_material"][:20],
+                        #             cantidad,
+                        #             precio,
+                        #             subtotal
+                        #         ))
+                            
+                        #     print("-" * 65)
+                        #     print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(64))
+                        # else:
+                        #     print("  No hay materiales registrados para esta cotización")
+                        # # Materiales
+                        # print("\n📦 MATERIALES")
+                        # total_materiales = 0
+                        # if materiales and len(materiales) > 0:
+                        #     print("-" * 65)
+                        #     print("| {:<3} | {:<20} | {:<8} | {:>12} | {:>10} |".format(
+                        #         "#", "Nombre Material", "Cantidad", "Precio", "Subtotal"))
+                        #     print("-" * 65)
+                            
+                        #     for i, material in enumerate(materiales, 1):
+                        #         try:
+                        #             # Imprimir el material para depuración
+                        #             print(f"Procesando material: {material}")
+                                    
+                        #             # Extraer valores con manejo de errores
+                        #             cantidad = 0
+                        #             if "cantidad" in material and material["cantidad"] is not None:
+                        #                 cantidad = float(material["cantidad"])
+                                    
+                        #             precio = 0
+                        #             if "precio_unitario" in material and material["precio_unitario"] is not None:
+                        #                 precio = float(material["precio_unitario"])
+                                    
+                        #             nombre_material = "Desconocido"
+                        #             if "nombre_material" in material and material["nombre_material"] is not None:
+                        #                 nombre_material = material["nombre_material"]
+                                    
+                        #             subtotal = cantidad * precio
+                        #             total_materiales += subtotal
+                                    
+                        #             print("| {:<3} | {:<20} | {:<8} | {:>12.2f} | {:>10.2f} |".format(
+                        #                 i,
+                        #                 nombre_material[:20],
+                        #                 cantidad,
+                        #                 precio,
+                        #                 subtotal
+                        #             ))
+                        #         except Exception as e:
+                        #             print(f"Error al procesar material {i}: {str(e)}")
+                            
+                        #     print("-" * 65)
+                        #     print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(64))
+                        # else:
+                        #     print("  No hay materiales registrados para esta cotización")
+                        #     print(f"  Valor de materiales: {materiales}")
                         # Materiales
                         print("\n📦 MATERIALES")
                         total_materiales = 0
-                        if materiales:
-                            print("-" * 65)
-                            print("| {:<3} | {:<20} | {:<8} | {:>12} | {:>10} |".format(
+                        if materiales and len(materiales) > 0:
+                            print("-" * 75)
+                            print("| {:<3} | {:<25} | {:<12} | {:>12} | {:>12} |".format(
                                 "#", "Nombre Material", "Cantidad", "Precio", "Subtotal"))
-                            print("-" * 65)
+                            print("-" * 75)
                             
                             for i, material in enumerate(materiales, 1):
-                                cantidad = float(material["cantidad"]) if material["cantidad"] else 0
-                                precio = float(material["precio_unitario"]) if material["precio_unitario"] else 0
-                                
-                                subtotal = cantidad * precio
-                                total_materiales += subtotal
-                                
-                                print("| {:<3} | {:<20} | {:<8} | {:>12.2f} | {:>10.2f} |".format(
-                                    i,
-                                    material["nombre_material"][:20],
-                                    cantidad,
-                                    precio,
-                                    subtotal
-                                ))
+                                try:
+                                    # Extraer valores con manejo de errores
+                                    cantidad = 0
+                                    if "cantidad" in material and material["cantidad"] is not None:
+                                        cantidad = float(material["cantidad"])
+                                    
+                                    precio = 0
+                                    if "precio_unitario" in material and material["precio_unitario"] is not None:
+                                        precio = float(material["precio_unitario"])
+                                    
+                                    nombre_material = "Desconocido"
+                                    if "nombre_material" in material and material["nombre_material"] is not None:
+                                        nombre_material = material["nombre_material"]
+                                    
+                                    unidad_medida = ""
+                                    if "unidad_medida" in material and material["unidad_medida"] is not None:
+                                        unidad_medida = material["unidad_medida"]
+                                    
+                                    nombre_proveedor = ""
+                                    if "nombre_proveedor" in material and material["nombre_proveedor"] is not None:
+                                        nombre_proveedor = f" ({material['nombre_proveedor']})"
+                                    
+                                    subtotal = cantidad * precio
+                                    total_materiales += subtotal
+                                    
+                                    print("| {:<3} | {:<25} | {:<12} | {:>12.2f} | {:>12.2f} |".format(
+                                        i,
+                                        nombre_material[:25],
+                                        f"{cantidad} {unidad_medida}",
+                                        precio,
+                                        subtotal
+                                    ))
+                                except Exception as e:
+                                    print(f"Error al procesar material {i}: {str(e)}")
                             
-                            print("-" * 65)
-                            print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(64))
+                            print("-" * 75)
+                            print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(74))
                         else:
                             print("  No hay materiales registrados para esta cotización")
                         
