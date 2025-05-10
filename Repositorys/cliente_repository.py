@@ -6,11 +6,16 @@ from typing import List, Optional
 from Models.cliente import Cliente  # Asegúrate de que la clase Cliente esté en este path
 
 class ClienteRepository:
-    def __init__(self, connection_string: str):
-        self.connection_string = connection_string
+    # def __init__(self, connection_string: str):
+    #     self.connection_string = connection_string
+
+    # def _get_connection(self):
+    #     return pyodbc.connect(self.connection_string)
+    def __init__(self, connection):
+        self.connection = connection
 
     def _get_connection(self):
-        return pyodbc.connect(self.connection_string)
+        return self.connection
 
     def create_cliente(self, cliente: Cliente) -> Cliente:
         query = """

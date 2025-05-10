@@ -172,11 +172,16 @@ from typing import List, Optional
 from Models.material import Material
 
 class MaterialRepository:
-    def __init__(self, connection_string: str):
-        self.connection_string = connection_string
+    # def __init__(self, connection_string: str):
+    #     self.connection_string = connection_string
+
+    # def _get_connection(self):
+    #     return pyodbc.connect(self.connection_string)
+    def __init__(self, connection):
+        self.connection = connection  # Aquí, connection es una conexión abierta
 
     def _get_connection(self):
-        return pyodbc.connect(self.connection_string)
+        return self.connection  # Regresas la conexión ya abierta
 
     def create_material(self, material: Material) -> Material:
         query = """
@@ -268,3 +273,10 @@ class MaterialRepository:
             fecha_registro=row.fecha_registro,
             activo=bool(row.activo)
         )
+    def buscar_por_nombre(self, nombre: str) -> List[Material]:
+        query = "SELECT * FROM Materiales WHERE nombre LIKE ? AND activo = 1"
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, (f"%{nombre}%",))
+            rows = cursor.fetchall()
+            return [self._row_to_material(row) for row in rows]

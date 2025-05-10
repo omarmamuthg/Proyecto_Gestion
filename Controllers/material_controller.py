@@ -48,3 +48,5 @@ class MaterialController:
         except Exception as e:
             print(f"❌ Error al eliminar material: {str(e)}")
             return False
+    def buscar_por_nombre(self, nombre: str):
+        return self.repository.buscar_por_nombre(nombre)

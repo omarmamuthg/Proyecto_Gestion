@@ -5,8 +5,10 @@ from Models.cliente import Cliente
 from Repositorys.cliente_repository import ClienteRepository
 
 class ClienteController:
-    def __init__(self, connection_string: str):
-        self.repository = ClienteRepository(connection_string)
+    # def __init__(self, connection_string: str):
+    #     self.repository = ClienteRepository(connection_string)
+    def __init__(self, connection):
+        self.repository = ClienteRepository(connection)
 
     def crear_cliente(self, cliente_data: dict) -> Cliente:
         """Crea un nuevo cliente validando el tipo_cliente y RFC."""

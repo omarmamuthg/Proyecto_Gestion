@@ -8,8 +8,10 @@ class ProveedorRepository:
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
 
+    # def _get_connection(self):
+    #     return pyodbc.connect(self.connection_string)
     def _get_connection(self):
-        return pyodbc.connect(self.connection_string)
+        return self.connection_string 
 
     def create_proveedor(self, proveedor: Proveedor) -> Proveedor:
         query = """
