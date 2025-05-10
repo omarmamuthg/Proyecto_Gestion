@@ -12,7 +12,7 @@ class MaterialController:
         return self.repository.create_material(material)
 
     def obtener_material(self, id_material: int, incluir_inactivos: bool = False) -> Optional[Material]:
-        return self.repository.get_material(id_material, incluir_inactivos)
+        return self.repository.get_material(id_material)
 
     def obtener_todos_materiales(self, activos_only: bool = True) -> List[Material]:
         return self.repository.get_all_materiales(activos_only)

@@ -215,11 +215,11 @@ from PyQt5.QtWidgets import (
 )
 
 class MaterialGUI(QWidget):
-    def __init__(self, connection):
+    def __init__(self, connection_string):
         super().__init__()
-        self.controller = MaterialController(connection)  # Pasamos la conexión abierta aquí
-        self.proveedor_controller = ProveedorController(connection)
-        self.proveedor_material_controller = ProveedorMaterialController(connection)
+        self.controller = MaterialController(connection_string)  # Pasamos la cadena de conexión aquí
+        self.proveedor_controller = ProveedorController(connection_string)
+        self.proveedor_material_controller = ProveedorMaterialController(connection_string)
         self.init_ui()
 
     def init_ui(self):
@@ -426,13 +426,16 @@ class MaterialGUI(QWidget):
                     QMessageBox.warning(self, "Advertencia", "El precio debe ser mayor que cero.")
                     return
 
-                self.proveedor_material_controller.vincular_material(
+                resultado = self.proveedor_material_controller.vincular_material(
                     proveedor_seleccionado.id_proveedor,
                     self.selected_id,
                     precio
                 )
-                QMessageBox.information(self, "Éxito", "Material vinculado con proveedor.")
-                confirm_dialog.close()
+                if resultado:
+                    QMessageBox.information(self, "Éxito", "Material vinculado con proveedor.")
+                    confirm_dialog.close()
+                else:
+                    QMessageBox.critical(self, "Error", "No se pudo vincular el material con el proveedor. Revisa la consola para más detalles.")
             except ValueError:
                 QMessageBox.warning(self, "Advertencia", "El precio debe ser un número válido.")
             except Exception as e:
@@ -448,12 +451,12 @@ class MaterialGUI(QWidget):
 if __name__ == "__main__":
     from Database.Conexion import obtener_conexion
 
-    connection = obtener_conexion()  # Se obtiene la conexión
-    if connection is None:
+    connection_string = obtener_conexion()  # Se obtiene la cadena de conexión
+    if connection_string is None:
         print("❌ No se pudo conectar a la base de datos.")
         exit()
 
     app = QApplication(sys.argv)
-    ventana = MaterialGUI(connection)  # Se pasa la conexión abierta
+    ventana = MaterialGUI(connection_string)  # Se pasa la cadena de conexión
     ventana.show()
     sys.exit(app.exec_())

@@ -133,7 +133,12 @@ class MenuPrincipal(QWidget):
         self.proveedor_window.show()
 
     def abrir_material(self):
-        self.material_window = MaterialGUI(self.connection)
+        from Database.Conexion import obtener_conexion
+        connection_string = obtener_conexion()
+        if connection_string is None:
+            QMessageBox.critical(self, "Error", "❌ No se pudo conectar a la base de datos.")
+            return
+        self.material_window = MaterialGUI(connection_string)
         self.material_window.show()
 
 if __name__ == "__main__":

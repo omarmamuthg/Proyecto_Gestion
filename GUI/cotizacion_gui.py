@@ -438,11 +438,9 @@ class MaterialSelector(QDialog):
         self.setMinimumHeight(600)
         
         self.connection_string = connection_string
-        # Establecer la conexión
-        self.connection = pyodbc.connect(connection_string)
-        # Pasar la conexión a los controladores y repositorios
-        self.material_controller = MaterialController(self.connection)
-        self.proveedor_material_repo = ProveedorMaterialRepository(self.connection)
+        self.material_controller = MaterialController(connection_string)
+        self._conn_pm = pyodbc.connect(connection_string)
+        self.proveedor_material_repo = ProveedorMaterialRepository(self._conn_pm)
         self.selected_material = None
         self.selected_proveedor_material_id = None
         self.selected_cantidad = 1.0
@@ -451,8 +449,8 @@ class MaterialSelector(QDialog):
         self.load_materials()
         
     def __del__(self):
-        if hasattr(self, 'connection') and self.connection:
-            self.connection.close()
+        if hasattr(self, '_conn_pm') and self._conn_pm:
+            self._conn_pm.close()
         
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -1497,7 +1495,8 @@ class CotizacionGUI(QWidget):
                 "nombre_cliente": self.current_client.nombre,
                 "rfc_cliente": self.current_client.rfc,
                 "correo_cliente": self.current_client.correo,
-                "telefono_cliente": telefono_cliente,
+                # Teléfono nunca debe ser None ni vacío
+                "telefono_cliente": self.current_client.telefono if self.current_client.telefono else "SIN TELÉFONO",
                 "tipo_cliente": tipo_cliente,
                 "fecha_creacion": datetime.strptime(self.fecha_creacion_input.text(), '%Y-%m-%d'),
                 "fecha_activacion": datetime.strptime(self.fecha_activacion_input.text(), '%Y-%m-%d'),
