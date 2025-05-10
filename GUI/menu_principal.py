@@ -79,7 +79,8 @@ from PyQt5.QtWidgets import (
 from Database.Conexion import obtener_conexion
 from GUI.cliente_gui import ClienteGUI
 from GUI.proveedor_gui import ProveedorGUI
-from GUI.material_gui import MaterialGUI  # 🔥 Agregamos la importación de MaterialGUI
+from GUI.material_gui import MaterialGUI
+from GUI.cotizacion_gui import CotizacionGUI  # 🔥 Agregamos la importación de CotizacionGUI
 
 class MenuPrincipal(QWidget):
     def __init__(self):
@@ -114,23 +115,24 @@ class MenuPrincipal(QWidget):
 
         # Conectar botones a funciones
         self.btn_cliente.clicked.connect(self.abrir_cliente)
-        self.btn_cotizaciones.clicked.connect(self.cotizaciones_no_disponible)
+        self.btn_cotizaciones.clicked.connect(self.abrir_cotizacion)  # 🔥 Cambiamos a abrir_cotizacion
         self.btn_proveedores.clicked.connect(self.abrir_proveedor)
-        self.btn_materiales.clicked.connect(self.abrir_material)  # 🔥 Conexión corregida
+        self.btn_materiales.clicked.connect(self.abrir_material)
         self.btn_salir.clicked.connect(self.close)
 
     def abrir_cliente(self):
         self.cliente_window = ClienteGUI(self.connection)
         self.cliente_window.show()
 
-    def cotizaciones_no_disponible(self):
-        QMessageBox.information(self, "Info", "🔧 Cotizaciones no disponible todavía.")
+    def abrir_cotizacion(self):  # 🔥 Nuevo método para abrir CotizacionGUI
+        self.cotizacion_window = CotizacionGUI(self.connection)
+        self.cotizacion_window.show()
 
     def abrir_proveedor(self):
         self.proveedor_window = ProveedorGUI(self.connection)
         self.proveedor_window.show()
 
-    def abrir_material(self):  # 🔥 Nueva función para abrir MaterialGUI
+    def abrir_material(self):
         self.material_window = MaterialGUI(self.connection)
         self.material_window.show()
 

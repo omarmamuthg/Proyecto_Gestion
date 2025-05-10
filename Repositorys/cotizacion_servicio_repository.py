@@ -6,7 +6,10 @@ from typing import List, Optional
 from Models.cotizacion_servicio import CotizacionServicio  # Asegúrate de que la clase esté en este path
 
 class CotizacionServicioRepository:
-    def __init__(self, connection_string: str):
+    def __init__(self, connection_string):
+        print(f"🧪 connection_string recibido en CotizacionRepository: {repr(connection_string)}")
+        if not isinstance(connection_string, str):
+            raise TypeError("La conexión debe ser una cadena de texto (str).")
         self.connection_string = connection_string
 
     def _get_connection(self):

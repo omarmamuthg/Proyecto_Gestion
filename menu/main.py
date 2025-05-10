@@ -1008,34 +1008,6 @@ while True:
                     print("  No se agregaron servicios")
 
 
-                # print("\n📦 MATERIALES")
-                # total_materiales = 0
-                # if materiales_seleccionados:
-                #     print("-"*65)
-                #     print("| {:<3} | {:<20} | {:>8} | {:>12} | {:>10} |".format(
-                #         "#", "Nombre Material", "Cantidad", "Costo Unit.", "Subtotal"))
-                #     print("-"*65)
-
-                #     for i, material in enumerate(materiales_seleccionados, 1):
-                #         cantidad = material["cantidad"]
-                        
-                #         # Simulación de costo unitario (si no tienes costo aún, usa un costo fijo o 0.0 provisional)
-                #         costo_unitario = 50.00  # ❗ Aquí deberías obtener el costo real del material
-                #         subtotal = float(cantidad) * costo_unitario
-                #         total_materiales += subtotal
-
-                #         print("| {:<3} | {:<20} | {:>8} | {:>12.2f} | {:>10.2f} |".format(
-                #             i,
-                #             material["nombre_material"][:20],
-                #             str(cantidad),
-                #             costo_unitario,
-                #             subtotal
-                #         ))
-                #     print("-"*65)
-                #     print(f"💰 TOTAL MATERIALES: ${total_materiales:.2f}".rjust(64))
-                # else:
-                #     print("  No se agregaron materiales")
-
                 print("\n📦 MATERIALES")
                 total_materiales = 0
                 proveedor_material_repository = ProveedorMaterialRepository(connection_string)
@@ -1091,71 +1063,6 @@ while True:
                 print("="*60)
 
 
-                # # Confirmación final mejorada
-                # while True:
-                #     """Muestra un menú de confirmación estilizado."""
-                #     print("\n╔══════════════════════════════════════╗")
-                #     print("║        Opciones de Cotización         ║")
-                #     print("╠══════════════════════════════════════╣")
-                #     print("║ [1] Guardar Cotización             ║")
-                #     print("║ [2] Editar Cotización              ║")
-                #     print("║ [3] Cancelar Operación               ║")
-                #     print("╚══════════════════════════════════════╝")
-                #     confirmar = input("\nSeleccione una opción (1-3): ").strip()
-                #     if confirmar in ['1', '2', '3']:
-                #         break
-                #     print("❌ Opción inválida. Por favor ingrese 1, 2 o 3")
-
-                # if confirmar == '1':
-                #     # Guardar cotización
-                #     nueva_cotizacion = controller_cotizacion.crear_cotizacion(cotizacion_data)
-                #     print(f"\n✅ Cotización creada con ID: {nueva_cotizacion.id_cotizacion}")
-                    
-                #     # Guardar servicios
-                #     repository_cotizacion_servicio = CotizacionServicioRepository(connection_string)
-                #     for servicio_data in servicios_seleccionados:
-                #         nueva_cotizacion_servicio = CotizacionServicio(
-                #             id_cotizacion=nueva_cotizacion.id_cotizacion,
-                #             id_servicio=0,
-                #             nombre_servicio=servicio_data["nombre_servicio"],
-                #             descripcion_servicio=servicio_data["descripcion_servicio"],
-                #             tipo_servicio=servicio_data["tipo_servicio"],
-                #             costo_servicio=servicio_data["costo_servicio"],
-                #             cantidad_servicio=servicio_data["cantidad_servicio"],
-                #             fecha_creacion_servicio=servicio_data["fecha_creacion_servicio"],
-                #             activo=servicio_data["activo"],
-                #             usuario_creador_servicio=servicio_data["usuario_creador_servicio"],
-                #             fecha_actualizacion_servicio=servicio_data["fecha_actualizacion_servicio"]
-                #         )
-                #         repository_cotizacion_servicio.create_cotizacion_servicio(nueva_cotizacion_servicio)
-                #         print(f"✅ Servicio '{servicio_data['nombre_servicio']}' agregado a la cotización.")
-                    
-                #     # Guardar materiales
-                #     cotizacion_material_controller = CotizacionMaterialController(connection_string)
-                #     for material in materiales_seleccionados:
-                #         cotizacion_material_controller.agregar_material_a_cotizacion(
-                #             id_cotizacion=nueva_cotizacion.id_cotizacion,
-                #             id_proveedor_material=material['id_proveedor_material'],
-                #             cantidad=material['cantidad']
-                #         )
-                #         print(f"✅ Material '{material['nombre_material']}' agregado a la cotización.")
-                    
-                #     print("✅ Todos los elementos se guardaron correctamente")
-                    
-                # elif confirmar == '2':
-                #     print("\n✏️ Redirigiendo a edición...")
-                #     continue  # Vuelve al inicio del bucle
-                    
-                # elif confirmar == '3':
-                #     print("\n❌ Operación cancelada por el usuario")
-                #     input("\nPresione Enter para continuar...")
-                #     limpiar_pantalla()
-                #     continue  # Vuelve al menú principal de cotizaciones
-
-                # input("\nPresione Enter para continuar...")
-                # limpiar_pantalla()
-                # break  # Vuelve al menú principal de cotizaciones
-                # Confirmación final mejorada
                 while True:
                     """Muestra un menú de confirmación estilizado."""
                     print("\n╔══════════════════════════════════════╗")

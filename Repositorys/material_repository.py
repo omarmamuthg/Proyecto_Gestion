@@ -172,25 +172,22 @@ from typing import List, Optional
 from Models.material import Material
 
 class MaterialRepository:
-    # def __init__(self, connection_string: str):
-    #     self.connection_string = connection_string
-
-    # def _get_connection(self):
-    #     return pyodbc.connect(self.connection_string)
-    def __init__(self, connection):
-        self.connection = connection  # Aquí, connection es una conexión abierta
+    def __init__(self, connection_string: str):
+        self.connection_string = connection_string
+        self.table_name = "Materiales"
 
     def _get_connection(self):
-        return self.connection  # Regresas la conexión ya abierta
+        return pyodbc.connect(self.connection_string)
 
     def create_material(self, material: Material) -> Material:
         query = """
         INSERT INTO Materiales (
             nombre, descripcion, unidad_medida, marca, categoria, fecha_registro, activo
-        )
+        ) 
         OUTPUT INSERTED.id_material
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """
+        
         params = (
             material.nombre,
             material.descripcion,
@@ -198,7 +195,7 @@ class MaterialRepository:
             material.marca,
             material.categoria,
             material.fecha_registro or datetime.now(),
-            material.activo if hasattr(material, 'activo') else 1
+            material.activo
         )
 
         with self._get_connection() as conn:
@@ -206,24 +203,26 @@ class MaterialRepository:
             cursor.execute(query, params)
             inserted_id = cursor.fetchone()[0]
             conn.commit()
+            
             return self.get_material(inserted_id)
 
-    def get_material(self, id_material: int, incluir_inactivos: bool = False) -> Optional[Material]:
+    def get_material(self, id_material: int) -> Optional[Material]:
         query = "SELECT * FROM Materiales WHERE id_material = ?"
-        if not incluir_inactivos:
-            query += " AND activo = 1"
         
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(query, id_material)
             row = cursor.fetchone()
-            return self._row_to_material(row) if row else None
+            
+            if row:
+                return self._row_to_material(row)
+            return None
 
     def get_all_materiales(self, activos_only: bool = True) -> List[Material]:
         query = "SELECT * FROM Materiales"
         if activos_only:
             query += " WHERE activo = 1"
-        
+            
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(query)
@@ -231,18 +230,24 @@ class MaterialRepository:
 
     def update_material(self, id_material: int, material: Material) -> Optional[Material]:
         query = """
-        UPDATE Materiales
-        SET nombre = ?, descripcion = ?, unidad_medida = ?, 
-            marca = ?, categoria = ?, activo = ?
+        UPDATE Materiales 
+        SET 
+            nombre = ?,
+            descripcion = ?,
+            unidad_medida = ?,
+            marca = ?,
+            categoria = ?,
+            activo = ?
         WHERE id_material = ?
         """
+        
         params = (
             material.nombre,
             material.descripcion,
             material.unidad_medida,
             material.marca,
             material.categoria,
-            getattr(material, 'activo', 1),
+            material.activo,
             id_material
         )
 
@@ -250,10 +255,12 @@ class MaterialRepository:
             cursor = conn.cursor()
             cursor.execute(query, params)
             conn.commit()
-            return self.get_material(id_material) if cursor.rowcount > 0 else None
+            
+            if cursor.rowcount > 0:
+                return self.get_material(id_material)
+            return None
 
-    def marcar_como_inactivo(self, id_material: int) -> bool:
-        """Eliminación lógica (marca como inactivo)"""
+    def delete_material(self, id_material: int) -> bool:
         query = "UPDATE Materiales SET activo = 0 WHERE id_material = ?"
         
         with self._get_connection() as conn:
@@ -273,6 +280,42 @@ class MaterialRepository:
             fecha_registro=row.fecha_registro,
             activo=bool(row.activo)
         )
+
+    def obtener_material(self, id_material: int) -> Optional[Material]:
+        """Alias en español para get_material"""
+        return self.get_material(id_material)
+
+    def obtener_materiales(self):
+        """Obtiene todos los materiales activos"""
+        try:
+            sql = """
+                SELECT id_material, nombre, descripcion, unidad_medida, 
+                       marca, categoria, fecha_registro, activo
+                FROM Materiales
+                WHERE activo = 1
+                ORDER BY nombre
+            """
+            with self._get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                return [
+                    {
+                        "id_material": row.id_material,
+                        "nombre": row.nombre,
+                        "descripcion": row.descripcion,
+                        "unidad_medida": row.unidad_medida,
+                        "marca": row.marca,
+                        "categoria": row.categoria,
+                        "fecha_registro": row.fecha_registro,
+                        "activo": row.activo
+                    }
+                    for row in rows
+                ] if rows else []
+        except Exception as e:
+            print(f"❌ Error al obtener materiales: {str(e)}")
+            return []
+
     def buscar_por_nombre(self, nombre: str) -> List[Material]:
         query = "SELECT * FROM Materiales WHERE nombre LIKE ? AND activo = 1"
         with self._get_connection() as conn:

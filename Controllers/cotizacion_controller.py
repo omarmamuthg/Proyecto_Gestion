@@ -3,10 +3,17 @@ from typing import List, Optional
 from datetime import datetime
 from Models.cotizacion import Cotizacion
 from Repositorys.cotizacion_repository import CotizacionRepository
+from Repositorys.cotizacion_servicio_repository import CotizacionServicioRepository
+from Repositorys.cotizacion_material_repository import CotizacionMaterialRepository
+import pyodbc
 
 class CotizacionController:
+    # def __init__(self, connection_string):
+    #     self.connection_string = connection_string
     def __init__(self, connection_string: str):
         self.repository = CotizacionRepository(connection_string)
+        self.cotizacion_servicio_repo = CotizacionServicioRepository(connection_string)
+        self.cotizacion_material_repo = CotizacionMaterialRepository(connection_string)
 
     def crear_cotizacion(self, cotizacion_data: dict) -> Cotizacion:
         """
@@ -47,6 +54,7 @@ class CotizacionController:
         return self.repository.get_cotizacion(id_cotizacion)
 
     def obtener_todas_cotizaciones(self, activas_only: bool = True) -> List[Cotizacion]:
+        # conn = pyodbc.connect(self.connection_string)
         """
         Obtiene todas las cotizaciones, con opción de filtrar por activas.
 
@@ -220,86 +228,23 @@ class CotizacionController:
         }
     
 
-    def obtener_todas_cotizaciones(self, activas_only: bool = True) -> List[Cotizacion]:
+    def obtener_detalles_cotizacion(self, id_cotizacion: int) -> dict:
         """
-        Obtiene todas las cotizaciones
+        Obtiene todos los detalles de una cotización incluyendo servicios y materiales.
         """
-        return self.repository.get_all_cotizaciones(activas_only)
-
-    # def obtener_detalles_cotizacion(self, id_cotizacion: int) -> Optional[dict]:
-    #     """
-    #     Obtiene los detalles completos de una cotización, incluyendo servicios y materiales
-    #     """
-    #     try:
-    #         # Obtener la cotización
-    #         cotizacion = self.repository.get_cotizacion(id_cotizacion)
-    #         if not cotizacion:
-    #             return None
-                
-    #         # Obtener los servicios de la cotización
-    #         from Repositorys.cotizacion_servicio_repository import CotizacionServicioRepository
-    #         servicios_repo = CotizacionServicioRepository(self.connection_string)
-    #         servicios = servicios_repo.get_servicios_por_cotizacion(id_cotizacion)
-                
-    #         # Obtener los materiales de la cotización
-    #         from Repositorys.cotizacion_material_repository import CotizacionMaterialRepository
-    #         materiales_repo = CotizacionMaterialRepository(self.connection_string)
-    #         materiales = materiales_repo.obtener_materiales_por_cotizacion(id_cotizacion)
-                
-    #         # Crear un diccionario con toda la información
-    #         detalles = {
-    #             "cotizacion": cotizacion,
-    #             "servicios": servicios,
-    #             "materiales": materiales
-    #         }
-                
-    #         return detalles
-    #     except Exception as e:
-    #         print(f"❌ Error al obtener detalles de cotización: {str(e)}")
-    #         return 
-
-    def obtener_detalles_cotizacion(self, id_cotizacion):
-        """
-        Obtiene los detalles completos de una cotización, incluyendo servicios y materiales
-        """
-        try:
-            # Obtener la cotización
-            cotizacion = self.repository.get_cotizacion(id_cotizacion)
-            if not cotizacion:
-                return None
-                
-            # Obtener los servicios de la cotización
-            from Repositorys.cotizacion_servicio_repository import CotizacionServicioRepository
-            servicios_repo = CotizacionServicioRepository(self.connection_string)
-            servicios = servicios_repo.get_servicios_por_cotizacion(id_cotizacion)
-                
-            # Obtener los materiales de la cotización
-            from Repositorys.cotizacion_material_repository import CotizacionMaterialRepository
-            materiales_repo = CotizacionMaterialRepository(self.connection_string)
-            materiales = materiales_repo.obtener_materiales_por_cotizacion(id_cotizacion)
-                
-            # Crear un diccionario con toda la información
-            detalles = {
-                "cotizacion": cotizacion,
-                "servicios": servicios,
-                "materiales": materiales
-            }
-                
-            return detalles
-        except Exception as e:
-            print(f"❌ Error al obtener detalles de cotización: {str(e)}")
+        cotizacion = self.repository.get_cotizacion(id_cotizacion)
+        if not cotizacion:
             return None
-    def obtener_todas_cotizaciones(self, activas_only: bool = True):
-        """
-        Obtiene todas las cotizaciones
-        """
-        return self.repository.get_all_cotizaciones(activas_only)
 
-    def obtener_cotizacion(self, id_cotizacion: int):
-        """
-        Obtiene una cotización por su ID
-        """
-        return self.repository.get_cotizacion(id_cotizacion)
+        servicios = self.cotizacion_servicio_repo.get_servicios_por_cotizacion(id_cotizacion)
+        materiales = self.cotizacion_material_repo.obtener_materiales_por_cotizacion(id_cotizacion)
+
+        return {
+            "cotizacion": cotizacion,
+            "servicios": servicios,
+            "materiales": materiales
+        }
+
     def marcar_cotizacion_como_inactiva(self, id_cotizacion):
         """
         Marca una cotización como inactiva (baja lógica)
@@ -333,45 +278,3 @@ class CotizacionController:
         except Exception as e:
             print(f"❌ Error inesperado: {str(e)}")
             return False
-    def obtener_todas_cotizaciones(self, activas_only: bool = True):
-        """
-        Obtiene todas las cotizaciones, con opción de filtrar por activas
-        
-        Args:
-            activas_only (bool): Si True, solo devuelve cotizaciones activas
-            
-        Returns:
-            List[Cotizacion]: Lista de cotizaciones
-        """
-        return self.repository.get_all_cotizaciones(activas_only)
-    def obtener_detalles_cotizacion(self, id_cotizacion):
-        """
-        Obtiene los detalles completos de una cotización, incluyendo servicios y materiales
-        """
-        try:
-            # Obtener la cotización
-            cotizacion = self.repository.get_cotizacion(id_cotizacion)
-            if not cotizacion:
-                return None
-                
-            # Obtener los servicios de la cotización
-            from Repositorys.cotizacion_servicio_repository import CotizacionServicioRepository
-            servicios_repo = CotizacionServicioRepository(self.connection_string)
-            servicios = servicios_repo.get_servicios_por_cotizacion(id_cotizacion)
-                
-            # Obtener los materiales de la cotización
-            from Repositorys.cotizacion_material_repository import CotizacionMaterialRepository
-            materiales_repo = CotizacionMaterialRepository(self.connection_string)
-            materiales = materiales_repo.obtener_materiales_por_cotizacion(id_cotizacion)
-                
-            # Crear un diccionario con toda la información
-            detalles = {
-                "cotizacion": cotizacion,
-                "servicios": servicios,
-                "materiales": materiales
-            }
-                
-            return detalles
-        except Exception as e:
-            print(f"❌ Error al obtener detalles de cotización: {str(e)}")
-            return None

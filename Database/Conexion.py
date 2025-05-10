@@ -66,9 +66,18 @@ class Conexion:
             self.conn.close()
             self.conn = None
 
+    def obtener_cadena_conexion(self) -> str:
+        return (
+            f'DRIVER={{ODBC Driver 17 for SQL Server}};'
+            f'SERVER={self.server};'
+            f'DATABASE={self.database};'
+            f'UID={self.username};'
+            f'PWD={self.password}'
+        )
+
 # Función de conveniencia para usar como singleton
-def obtener_conexion():
-    return Conexion().conectar()
+def obtener_conexion() -> str:
+    return Conexion().obtener_cadena_conexion()
 
 
 
@@ -547,7 +556,7 @@ def obtener_conexion():
 
 #             raise ValueError("Estado no válido. Use 'vigente', 'cancelada' o 'finalizada'")
 
-#         
+#     
 
 #         with self._get_connection() as conn:
 
@@ -657,7 +666,7 @@ def obtener_conexion():
 
 #         params = []
 
-#         
+#     
 
 #         if servicio:
 
@@ -667,13 +676,13 @@ def obtener_conexion():
 
 #             params.append(f"%{servicio}%")
 
-#         
+#     
 
 #         if activos_only:
 
 #             conditions.append("c.activo = 1")
 
-#         
+# 
 
 #         if id_cliente:
 
@@ -681,7 +690,7 @@ def obtener_conexion():
 
 #             params.append(id_cliente)
 
-#         
+# 
 
 #         if fecha_inicio and fecha_fin:
 
@@ -689,7 +698,7 @@ def obtener_conexion():
 
 #             params.extend([fecha_inicio, fecha_fin])
 
-#         
+# 
 
 #         if estado:
 
@@ -705,13 +714,13 @@ def obtener_conexion():
 
 #                 conditions.append("c.fecha_finalizacion IS NOT NULL")
 
-#         
+# 
 
 #         if conditions:
 
 #             query += " WHERE " + " AND ".join(conditions)
 
-#         
+# 
 
 #         with self._get_connection() as conn:
 
@@ -747,7 +756,7 @@ def obtener_conexion():
 
 #         count_query = "SELECT COUNT(*) FROM Cotizaciones"
 
-#         
+# 
 
 #         where_clause = " WHERE activo = 1" if activos_only else ""
 
@@ -755,13 +764,13 @@ def obtener_conexion():
 
 #         pagination_clause = f" OFFSET {offset} ROWS FETCH NEXT {per_page} ROWS ONLY"
 
-#         
+# 
 
 #         with self._get_connection() as conn:
 
 #             cursor = conn.cursor()
 
-#             
+# 
 
 #             # Obtener total de registros
 
@@ -769,7 +778,7 @@ def obtener_conexion():
 
 #             total = cursor.fetchone()[0]
 
-#             
+# 
 
 #             # Obtener datos paginados
 
@@ -777,7 +786,7 @@ def obtener_conexion():
 
 #             data = [self._row_to_cotizacion(row) for row in cursor.fetchall()]
 
-#             
+# 
 
 #             return {
 
@@ -817,13 +826,13 @@ def obtener_conexion():
 
 #             cursor.execute("BEGIN TRANSACTION")
 
-#             
+# 
 
 #             # Crear cotización
 
 #             cotizacion_creada = self.create_cotizacion(cotizacion)
 
-#             
+# 
 
 #             # Insertar servicios
 
@@ -847,7 +856,7 @@ def obtener_conexion():
 
 #                 )
 
-#             
+# 
 
 #             conn.commit()
 
@@ -862,7 +871,6 @@ def obtener_conexion():
 #         finally:
 
 #             conn.close()
-
 #             
 
 # #cotizacio_servicio_reporitory
@@ -873,7 +881,7 @@ def obtener_conexion():
 
 # from typing import List, Optional
 
-# from Models.cotizacion_servicio import CotizacionServicio  # Asegúrate de que la clase esté en este path
+# from Models.cotizacion_servicio import CotizacionServicio  # Asegúrate de que la clase esté en este path
 
 
 
@@ -1525,7 +1533,7 @@ def obtener_conexion():
 
 #         cotizaciones = self.obtener_todas_cotizaciones(activas_only=False)
 
-#         
+# 
 
 #         if not cotizaciones:
 
@@ -1541,13 +1549,13 @@ def obtener_conexion():
 
 #             }
 
-#         
+# 
 
 #         activas = sum(1 for c in cotizaciones if c.activo)
 
 #         canceladas = len(cotizaciones) - activas
 
-#         
+# 
 
 #         # Calcular promedio de días de vigencia para cotizaciones finalizadas
 
@@ -1563,7 +1571,7 @@ def obtener_conexion():
 
 #         promedio_vigencia = sum(vigentes) / len(vigentes) if vigentes else 0
 
-#         
+# 
 
 #         return {
 

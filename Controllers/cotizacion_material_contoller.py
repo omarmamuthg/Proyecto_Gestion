@@ -115,12 +115,25 @@ import pyodbc
 from decimal import Decimal
 from typing import Optional, List, Dict
 
-class CotizacionMaterialController:
+# class CotizacionMaterialController:
 
-    def __init__(self, connection_string: str):
-        self.cotizacion_material_repo = CotizacionMaterialRepository(connection_string)
-        self.cotizacion_repo = CotizacionRepository(connection_string)
-        self.proveedor_material_repo = ProveedorMaterialRepository(connection_string)
+#     def __init__(self, connection_string: str):
+#         self.cotizacion_material_repo = CotizacionMaterialRepository(connection_string)
+#         self.cotizacion_repo = CotizacionRepository(connection_string)
+#         self.proveedor_material_repo = ProveedorMaterialRepository(connection_string)
+# class CotizacionMaterialController:
+#     def __init__(self, connection_string):
+#         self.cotizacion_material_repo = CotizacionMaterialRepository(connection_string)  # Pasa la cadena aquí
+# class CotizacionMaterialController:
+#     def __init__(self, connection):
+#         self.connection = connection
+#         self.cotizacion_material_repo = CotizacionMaterialRepository(connection)
+class CotizacionMaterialController:
+    def __init__(self, connection_string):  # Usa connection_string aquí
+        self.connection_string = connection_string  # La cadena de conexión
+        self.cotizacion_material_repo = CotizacionMaterialRepository(connection_string)  # Pasa la cadena de conexión a Repo
+
+
 
     def __del__(self):
         if hasattr(self, 'conn') and self.conn:

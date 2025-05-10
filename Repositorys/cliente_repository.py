@@ -6,16 +6,19 @@ from typing import List, Optional
 from Models.cliente import Cliente  # Asegúrate de que la clase Cliente esté en este path
 
 class ClienteRepository:
-    # def __init__(self, connection_string: str):
-    #     self.connection_string = connection_string
+
+    def __init__(self, connection_string):
+        print(f"🧪 connection_string recibido en CotizacionRepository: {repr(connection_string)}")
+        if not isinstance(connection_string, str):
+            raise TypeError("La conexión debe ser una cadena de texto (str).")
+        self.connection_string = connection_string
 
     # def _get_connection(self):
-    #     return pyodbc.connect(self.connection_string)
-    def __init__(self, connection):
-        self.connection = connection
-
+    #     return self.connection
     def _get_connection(self):
-        return self.connection
+        return pyodbc.connect(self.connection_string)
+
+
 
     def create_cliente(self, cliente: Cliente) -> Cliente:
         query = """

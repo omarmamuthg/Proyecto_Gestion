@@ -1,12 +1,11 @@
-
 #material_controller
 from typing import List, Optional
 from Models.material import Material
 from Repositorys.material_repository import MaterialRepository
 
 class MaterialController:
-    def __init__(self, connection_string: str):
-        self.repository = MaterialRepository(connection_string)
+    def __init__(self, connection):
+        self.repository = MaterialRepository(connection)
 
     def crear_material(self, material_data: dict) -> Material:
         material = Material(**material_data)
@@ -48,5 +47,6 @@ class MaterialController:
         except Exception as e:
             print(f"❌ Error al eliminar material: {str(e)}")
             return False
+
     def buscar_por_nombre(self, nombre: str):
         return self.repository.buscar_por_nombre(nombre)

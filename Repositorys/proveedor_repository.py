@@ -7,11 +7,10 @@ from Models.proveedor import Proveedor
 class ProveedorRepository:
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
+        self.table_name = "Proveedores"  # Agregamos el nombre de la tabla
 
-    # def _get_connection(self):
-    #     return pyodbc.connect(self.connection_string)
     def _get_connection(self):
-        return self.connection_string 
+        return pyodbc.connect(self.connection_string)  # Corregimos para crear una conexión real
 
     def create_proveedor(self, proveedor: Proveedor) -> Proveedor:
         query = """
@@ -119,17 +118,37 @@ class ProveedorRepository:
             direccion=row.direccion,
             fecha_registro=row.fecha_registro,
             activo=bool(row.activo)
-            
-    )
-    # En ProveedorRepository.py
-    # def obtener_proveedor(self, id_proveedor: int) -> Optional[Proveedor]:  # Agregar método en español
-    #     return self.get_proveedor(id_proveedor)  # Reutiliza la lógica existente
-    
-    # def obtener_proveedor(self, id_proveedor: int) -> Optional[Proveedor]:
-    #     """Versión en español de get_proveedor (para compatibilidad)"""
-    #     return self.get_proveedor(id_proveedor)  # Reutiliza la lógica del método existente
-    
-    # Agrega este método si no existe
+        )
+
     def obtener_proveedor(self, id_proveedor: int) -> Optional[Proveedor]:
         """Alias en español para get_proveedor"""
         return self.get_proveedor(id_proveedor)
+
+    def obtener_proveedores(self):
+        """Obtiene todos los proveedores activos"""
+        try:
+            sql = """
+                SELECT id_proveedor, nombre, direccion, telefono, correo, rfc, activo
+                FROM Proveedores
+                WHERE activo = 1
+                ORDER BY nombre
+            """
+            with self._get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+                return [
+                    {
+                        "id_proveedor": row.id_proveedor,
+                        "nombre": row.nombre,
+                        "direccion": row.direccion,
+                        "telefono": row.telefono,
+                        "email": row.correo,  # Cambiado de email a correo para coincidir con la base de datos
+                        "rfc": row.rfc,
+                        "activo": row.activo
+                    }
+                    for row in rows
+                ] if rows else []
+        except Exception as e:
+            print(f"❌ Error al obtener proveedores: {str(e)}")
+            return []
