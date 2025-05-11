@@ -845,8 +845,15 @@ class CotizacionGUI(QWidget):
         self.setWindowTitle("Gestión de Cotizaciones")
         self.setMinimumSize(1000, 700)
 
+        # Establecer fondo rojo suave
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor("#FF4C4C"))  # Rojo suave
+        self.setAutoFillBackground(True)
+        self.setPalette(palette)
+
         # Layout principal
         main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(15)  # Espaciado entre elementos
 
         # Crear pestañas
         self.tabs = QTabWidget()
@@ -857,7 +864,7 @@ class CotizacionGUI(QWidget):
                 border-radius: 4px;
             }
             QTabBar::tab {
-                background-color: #f0f0f0;
+                background-color: #d3d3d3;  /* Gris humo */
                 border: 1px solid #cccccc;
                 border-bottom: none;
                 border-top-left-radius: 4px;

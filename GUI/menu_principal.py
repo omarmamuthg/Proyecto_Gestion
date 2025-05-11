@@ -72,15 +72,103 @@
 
 
 
+
+
+
+
+
+
+
+
+# import sys
+# from PyQt5.QtWidgets import (
+#     QApplication, QWidget, QVBoxLayout, QPushButton, QMessageBox
+# )
+# from Database.Conexion import obtener_conexion
+# from GUI.cliente_gui import ClienteGUI
+# from GUI.proveedor_gui import ProveedorGUI
+# from GUI.material_gui import MaterialGUI
+# from GUI.cotizacion_gui import CotizacionGUI  # 🔥 Agregamos la importación de CotizacionGUI
+
+# class MenuPrincipal(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.connection = obtener_conexion()
+
+#         if self.connection is None:
+#             QMessageBox.critical(self, "Error", "❌ No se pudo conectar a la base de datos.")
+#             sys.exit()
+
+#         self.init_ui()
+
+#     def init_ui(self):
+#         self.setWindowTitle("Menú Principal")
+#         self.setGeometry(100, 100, 400, 300)
+
+#         layout = QVBoxLayout()
+
+#         self.btn_cliente = QPushButton("Cliente")
+#         self.btn_cotizaciones = QPushButton("Cotizaciones")
+#         self.btn_proveedores = QPushButton("Proveedores")
+#         self.btn_materiales = QPushButton("Materiales")
+#         self.btn_salir = QPushButton("Salir")
+
+#         layout.addWidget(self.btn_cliente)
+#         layout.addWidget(self.btn_cotizaciones)
+#         layout.addWidget(self.btn_proveedores)
+#         layout.addWidget(self.btn_materiales)
+#         layout.addWidget(self.btn_salir)
+
+#         self.setLayout(layout)
+
+#         # Conectar botones a funciones
+#         self.btn_cliente.clicked.connect(self.abrir_cliente)
+#         self.btn_cotizaciones.clicked.connect(self.abrir_cotizacion)  # 🔥 Cambiamos a abrir_cotizacion
+#         self.btn_proveedores.clicked.connect(self.abrir_proveedor)
+#         self.btn_materiales.clicked.connect(self.abrir_material)
+#         self.btn_salir.clicked.connect(self.close)
+
+#     def abrir_cliente(self):
+#         self.cliente_window = ClienteGUI(self.connection)
+#         self.cliente_window.show()
+
+#     def abrir_cotizacion(self):  # 🔥 Nuevo método para abrir CotizacionGUI
+#         self.cotizacion_window = CotizacionGUI(self.connection)
+#         self.cotizacion_window.show()
+
+#     def abrir_proveedor(self):
+#         self.proveedor_window = ProveedorGUI(self.connection)
+#         self.proveedor_window.show()
+
+#     def abrir_material(self):
+#         from Database.Conexion import obtener_conexion
+#         connection_string = obtener_conexion()
+#         if connection_string is None:
+#             QMessageBox.critical(self, "Error", "❌ No se pudo conectar a la base de datos.")
+#             return
+#         self.material_window = MaterialGUI(connection_string)
+#         self.material_window.show()
+
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
+#     ventana = MenuPrincipal()
+#     ventana.show()
+#     sys.exit(app.exec_())
+
+
+
+#editado interfaz con color 
 import sys
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QPushButton, QMessageBox
 )
+from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtCore import Qt
 from Database.Conexion import obtener_conexion
 from GUI.cliente_gui import ClienteGUI
 from GUI.proveedor_gui import ProveedorGUI
 from GUI.material_gui import MaterialGUI
-from GUI.cotizacion_gui import CotizacionGUI  # 🔥 Agregamos la importación de CotizacionGUI
+from GUI.cotizacion_gui import CotizacionGUI
 
 class MenuPrincipal(QWidget):
     def __init__(self):
@@ -97,25 +185,51 @@ class MenuPrincipal(QWidget):
         self.setWindowTitle("Menú Principal")
         self.setGeometry(100, 100, 400, 300)
 
-        layout = QVBoxLayout()
+        # Establecer fondo rojo
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor("#FF4C4C"))  # Rojo suave
+        self.setAutoFillBackground(True)
+        self.setPalette(palette)
 
-        self.btn_cliente = QPushButton("Cliente")
+        layout = QVBoxLayout()
+        layout.setSpacing(15)  # Espaciado entre botones
+
+        # Crear botones
+        self.btn_cliente = QPushButton("Clientes")
         self.btn_cotizaciones = QPushButton("Cotizaciones")
         self.btn_proveedores = QPushButton("Proveedores")
         self.btn_materiales = QPushButton("Materiales")
         self.btn_salir = QPushButton("Salir")
 
-        layout.addWidget(self.btn_cliente)
-        layout.addWidget(self.btn_cotizaciones)
-        layout.addWidget(self.btn_proveedores)
-        layout.addWidget(self.btn_materiales)
-        layout.addWidget(self.btn_salir)
+        # Lista de botones para aplicar estilos
+        botones = [
+            self.btn_cliente,
+            self.btn_cotizaciones,
+            self.btn_proveedores,
+            self.btn_materiales,
+            self.btn_salir
+        ]
+
+        for boton in botones:
+            boton.setStyleSheet("""
+                QPushButton {
+                    background-color: #d3d3d3;  /* Gris humo */
+                    color: black;
+                    padding: 12px;
+                    border-radius: 8px;
+                    font-size: 16px;
+                }
+                QPushButton:hover {
+                    background-color: #bbbbbb;
+                }
+            """)
+            layout.addWidget(boton)
 
         self.setLayout(layout)
 
-        # Conectar botones a funciones
+        # Conectar botones
         self.btn_cliente.clicked.connect(self.abrir_cliente)
-        self.btn_cotizaciones.clicked.connect(self.abrir_cotizacion)  # 🔥 Cambiamos a abrir_cotizacion
+        self.btn_cotizaciones.clicked.connect(self.abrir_cotizacion)
         self.btn_proveedores.clicked.connect(self.abrir_proveedor)
         self.btn_materiales.clicked.connect(self.abrir_material)
         self.btn_salir.clicked.connect(self.close)
@@ -124,7 +238,7 @@ class MenuPrincipal(QWidget):
         self.cliente_window = ClienteGUI(self.connection)
         self.cliente_window.show()
 
-    def abrir_cotizacion(self):  # 🔥 Nuevo método para abrir CotizacionGUI
+    def abrir_cotizacion(self):
         self.cotizacion_window = CotizacionGUI(self.connection)
         self.cotizacion_window.show()
 

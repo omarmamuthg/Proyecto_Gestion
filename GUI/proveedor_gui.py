@@ -234,6 +234,8 @@
 #     ventana.show()
 #     sys.exit(app.exec_())
 
+
+
 # proveedor_gui.py
 from Controllers.proveedor_controller import ProveedorController
 import sys
@@ -241,6 +243,8 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QLineEdit, QLabel, QMessageBox, QTableWidget, QTableWidgetItem
 )
+from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtCore import Qt
 
 class ProveedorGUI(QWidget):
     def __init__(self, connection_string):
@@ -329,29 +333,58 @@ class ProveedorGUI(QWidget):
 
     def init_ui(self):
         self.setWindowTitle("Gestión de Proveedores")
+        self.setGeometry(100, 100, 1200, 600)
+
+        # Establecer fondo rojo
+        palette = self.palette()
+        palette.setColor(QPalette.Window, QColor("#FF4C4C"))  # Rojo suave
+        self.setAutoFillBackground(True)
+        self.setPalette(palette)
 
         layout = QVBoxLayout()
+        layout.setSpacing(15)  # Espaciado entre elementos
 
         # --------- Formularios ---------
         form_layout = QHBoxLayout()
+        form_layout.setSpacing(10)
+
+        # Estilo común para los campos de entrada
+        input_style = """
+            QLineEdit {
+                background-color: white;
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+                font-size: 14px;
+            }
+            QLineEdit:focus {
+                border: 2px solid #4CAF50;
+            }
+        """
 
         self.nombre_input = QLineEdit()
         self.nombre_input.setPlaceholderText("Nombre Proveedor")
+        self.nombre_input.setStyleSheet(input_style)
 
         self.contacto_input = QLineEdit()
         self.contacto_input.setPlaceholderText("Nombre Contacto")
+        self.contacto_input.setStyleSheet(input_style)
 
         self.telefono_input = QLineEdit()
         self.telefono_input.setPlaceholderText("10 dígitos")
+        self.telefono_input.setStyleSheet(input_style)
 
         self.correo_input = QLineEdit()
         self.correo_input.setPlaceholderText("Correo electrónico")
+        self.correo_input.setStyleSheet(input_style)
 
         self.direccion_input = QLineEdit()
         self.direccion_input.setPlaceholderText("Dirección")
+        self.direccion_input.setStyleSheet(input_style)
 
         self.rfc_input = QLineEdit()
         self.rfc_input.setPlaceholderText("13 caracteres")
+        self.rfc_input.setStyleSheet(input_style)
 
         form_layout.addWidget(self.nombre_input)
         form_layout.addWidget(self.contacto_input)
@@ -364,6 +397,22 @@ class ProveedorGUI(QWidget):
 
         # --------- Botones ---------
         button_layout = QHBoxLayout()
+        button_layout.setSpacing(10)
+
+        # Estilo común para los botones
+        button_style = """
+            QPushButton {
+                background-color: #d3d3d3;
+                color: black;
+                padding: 10px;
+                border-radius: 8px;
+                font-size: 14px;
+                min-width: 150px;
+            }
+            QPushButton:hover {
+                background-color: #bbbbbb;
+            }
+        """
 
         self.add_button = QPushButton("Agregar Proveedor")
         self.update_button = QPushButton("Actualizar Proveedor")
@@ -371,11 +420,11 @@ class ProveedorGUI(QWidget):
         self.search_button = QPushButton("Buscar por Nombre")
         self.refresh_button = QPushButton("Refrescar Lista")
 
-        button_layout.addWidget(self.add_button)
-        button_layout.addWidget(self.update_button)
-        button_layout.addWidget(self.delete_button)
-        button_layout.addWidget(self.search_button)
-        button_layout.addWidget(self.refresh_button)
+        # Aplicar estilo a los botones
+        for button in [self.add_button, self.update_button, self.delete_button, 
+                      self.search_button, self.refresh_button]:
+            button.setStyleSheet(button_style)
+            button_layout.addWidget(button)
 
         layout.addLayout(button_layout)
 
@@ -385,6 +434,30 @@ class ProveedorGUI(QWidget):
         self.proveedor_table.setHorizontalHeaderLabels([
             "ID", "Nombre", "Contacto", "Teléfono", "Correo", "RFC", "Dirección", "Fecha Registro", "Activo"
         ])
+
+        # Estilo para la tabla
+        self.proveedor_table.setStyleSheet("""
+            QTableWidget {
+                background-color: white;
+                alternate-background-color: #f9f9f9;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                gridline-color: #ddd;
+            }
+            QHeaderView::section {
+                background-color: #d3d3d3;
+                padding: 5px;
+                border: 1px solid #ddd;
+                font-weight: bold;
+            }
+            QTableWidget::item {
+                padding: 5px;
+            }
+            QTableWidget::item:selected {
+                background-color: #4CAF50;
+                color: white;
+            }
+        """)
 
         layout.addWidget(self.proveedor_table)
 
@@ -532,3 +605,7 @@ if __name__ == "__main__":
     ventana = ProveedorGUI(connection)
     ventana.show()
     sys.exit(app.exec_())
+
+
+
+# interfaz
